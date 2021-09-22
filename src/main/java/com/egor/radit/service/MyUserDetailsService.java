@@ -54,7 +54,6 @@ public class MyUserDetailsService implements UserDetailsService {
 
     public User login(User loginAttemptUser) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginAttemptUser.getUsername(), loginAttemptUser.getPassword()));
-
         //Auth Passed
         User loginUser = userRepository.findByUsername(loginAttemptUser.getUsername()).get();
         userRepository.save(loginUser);

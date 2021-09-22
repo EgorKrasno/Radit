@@ -33,6 +33,7 @@ public class PostService {
         newPost.setTitle(postRequest.getTitle());
         newPost.setContent(postRequest.getContent());
         newPost.setCreatedDate(Instant.now());
+        newPost.setVoteCount(0);
 
         postRepository.save(newPost);
     }
@@ -47,6 +48,7 @@ public class PostService {
             postResponse.setTitle(post.getTitle());
             postResponse.setContent(post.getContent());
             postResponse.setUserName(post.getUser().getUsername());
+            postResponse.setVoteCount(post.getVoteCount());
             response.add(postResponse);
         }
         return response;
