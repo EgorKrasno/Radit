@@ -26,7 +26,7 @@ public class PostController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PostResponse>> getAllPosts() {
-        return new ResponseEntity<>(postService.getAllPosts(), HttpStatus.OK);
+    public ResponseEntity<List<PostResponse>> getAllPosts(Authentication auth) throws RaditException {
+        return new ResponseEntity<>(postService.getAllPosts(auth), HttpStatus.OK);
     }
 }

@@ -18,9 +18,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-    private String name;
     private String username;
     private String password;
-    @OneToMany(fetch = EAGER) //load roles all roles when user is loaded
+    @ManyToMany(fetch = EAGER)
     private Collection<Role> roles = new ArrayList<>();
 }

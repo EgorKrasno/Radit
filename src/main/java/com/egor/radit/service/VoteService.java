@@ -25,20 +25,30 @@ public class VoteService {
 
     public void vote(Authentication auth, VoteDto voteDto) throws RaditException {
         User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new RaditException("User not found"));
-        Post post = postRepository.findById(voteDto.getPostId()).orElseThrow(() -> new RaditException("Post not found"));
+        Post post = postRepository.findById(voteDto.getId()).orElseThrow(() -> new RaditException("Post not found"));
 
         Optional<Vote> vote = voteRepository.findByPostAndUser(post, user);
 
         if (vote.isEmpty()) {
             post.setVoteCount(post.getVoteCount() + voteDto.getDirection());
             postRepository.save(post);
+
             Vote newVote = new Vote();
             newVote.setUser(user);
             newVote.setDirection(voteDto.getDirection());
             newVote.setPost(post);
             voteRepository.save(newVote);
         } else {
-            throw new RaditException("You already voted");
+            Vote foundVote = vote.get();
+            if (foundVote.getDirection() != voteDto.getDirection()) {
+                post.setVoteCount(post.getVoteCount() + (voteDto.getDirection() * 2));
+                postRepository.save(post);
+
+                foundVote.setUser(user);
+                foundVote.setDirection(voteDto.getDirection());
+                foundVote.setPost(post);
+                voteRepository.save(foundVote);
+            }
         }
     }
 }

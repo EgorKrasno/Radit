@@ -1,21 +1,23 @@
 import {Dialog, Transition} from "@headlessui/react";
-import {Fragment, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import {createPost} from "../service/service";
 
 const LoginModal = ({closeModal, isOpen, handleLogin}) => {
+    const [errorMessage, setErrorMessage] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        try {
-            handleLogin({username, password});
+        try{
+            await handleLogin({username, password});
+            setErrorMessage("");
+            setUsername("");
+            setPassword("");
+            closeModal();
         } catch (e) {
-            console.log(e);
+            setErrorMessage(e);
         }
-        setUsername("");
-        setPassword("");
-        closeModal();
     }
 
     return (
@@ -23,7 +25,10 @@ const LoginModal = ({closeModal, isOpen, handleLogin}) => {
             <Dialog
                 as="div"
                 className="fixed inset-0 z-10 overflow-y-auto"
-                onClose={closeModal}
+                onClose={()=>{
+                    closeModal();
+                    setErrorMessage("");
+                }}
             >
                 <div className="min-h-screen px-4 text-center">
                     <Transition.Child
@@ -58,9 +63,10 @@ const LoginModal = ({closeModal, isOpen, handleLogin}) => {
                                 as="h3"
                                 className="text-lg font-medium text-center text-gray-900 pb-3"
                             >
-                               Login
+                                Login
                             </Dialog.Title>
-                            <div className="mt-2 space-y-6">
+                            {errorMessage !== "" && <p className="text-red-500 text-sm text-left">{errorMessage}</p>}
+                            <form className="mt-2 space-y-6" onSubmit={submitHandler}>
                                 <input type="text"
                                        className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
                                        placeholder="Username"
@@ -71,15 +77,11 @@ const LoginModal = ({closeModal, isOpen, handleLogin}) => {
                                        placeholder="Password"
                                        onChange={e => setPassword(e.target.value)}
                                 />
-                            </div>
-
-
-                            <div className="mt-4">
-                                <button onClick={submitHandler}
-                                        className="w-full cursor-pointer rounded-lg text-white focus:outline-none font-semibold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
-                                    Login 🚀
+                                <button
+                                    className="mt-4 w-full cursor-pointer rounded-lg text-white focus:outline-none font-semibold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
+                                    Login
                                 </button>
-                            </div>
+                            </form>
                         </div>
                     </Transition.Child>
                 </div>

@@ -31,6 +31,8 @@ public class Post {
 
     private Integer voteCount = 0;
 
+    private int commentCount = 0;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;

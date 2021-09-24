@@ -25,10 +25,13 @@ public class CommentService {
 
     public void save(Authentication auth, CommentDto commentDto) throws RaditException {
         Post post = postRepository.findById(commentDto.getPostId())
-                .orElseThrow(()-> new RaditException("Post not found"));
+                .orElseThrow(() -> new RaditException("Post not found"));
 
         User user = userRepository.findByUsername(auth.getName())
-                .orElseThrow(()-> new RaditException("User not found"));
+                .orElseThrow(() -> new RaditException("User not found"));
+
+        post.setCommentCount(post.getCommentCount() + 1);
+        postRepository.save(post);
 
         Comment newComment = new Comment();
         newComment.setPost(post);
@@ -42,7 +45,7 @@ public class CommentService {
         Post post = postRepository.findById(postId).orElseThrow(() -> new RaditException("Post not found"));
         List<Comment> foundComments = commentRepository.findByPost(post);
         List<CommentDto> response = new ArrayList<>();
-        for(Comment comment: foundComments){
+        for (Comment comment : foundComments) {
             CommentDto commentDto = new CommentDto();
             commentDto.setCreatedDate(comment.getCreatedDate());
             commentDto.setPostId(comment.getPost().getPostId());

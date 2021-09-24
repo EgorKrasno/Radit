@@ -2,14 +2,8 @@ jwt:
   secret: "VerySecureLol"
 
 spring:
-  mail:
-    host: smtp.mailtrap.io
-    port: 2525
-    username: 910ea63bfeadd1
-    password: b2eb5785d414b1
-    protocol: smtp
   datasource:
-    url: jdbc:mysql://localhost:3306/rd
+    url: jdbc:mysql://localhost:3306/lol
     username: root
     password: password
   jpa:
@@ -21,3 +15,4 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
 
+PASSWORD: "password"

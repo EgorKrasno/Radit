@@ -19,8 +19,8 @@ public class Vote {
 
     private int direction;
 
-    @ManyToOne(fetch= LAZY)
-    @JoinColumn(name ="postId", referencedColumnName = "postId")
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "postId", referencedColumnName = "postId")
     private Post post;
 
     @ManyToOne(fetch = LAZY)

@@ -2,6 +2,7 @@ package com.egor.radit.controller;
 
 
 import com.egor.radit.constant.SecurityConstant;
+import com.egor.radit.dto.RoleToUserDto;
 import com.egor.radit.exception.RaditException;
 import com.egor.radit.model.Role;
 import com.egor.radit.model.User;
@@ -27,9 +28,10 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/user/register")
-    public ResponseEntity<?> saveUser(@RequestBody User user) throws RaditException {
-        userService.register(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<User> saveUser(@RequestBody User user) throws RaditException {
+        User newUser = userService.register(user);
+        HttpHeaders jwtHeader = getJwtHeader(new UserPrincipal(newUser));
+        return new ResponseEntity<>(newUser, jwtHeader, HttpStatus.CREATED);
     }
 
     @PostMapping("/user/login")
@@ -45,7 +47,7 @@ public class UserController {
     }
 
     @PostMapping("/role/addtouser")
-    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm form) {
+    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserDto form) {
         userService.addRoleToUser(form.getUsername(), form.getRoleName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -67,10 +69,4 @@ public class UserController {
         headers.add(SecurityConstant.JWT_TOKEN_HEADER, jwtTokenProvider.generateJwtToken(userPrincipal));
         return headers;
     }
-}
-
-@Data
-class RoleToUserForm {
-    private String username;
-    private String roleName;
 }
