@@ -1,16 +1,28 @@
 import axios from "axios";
 
-const secret = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJhdWQiLCJzdWIiOiJhZG1pbiIsImlzcyI6IlJEIiwiZXhwIjoxNjMyNjgwNDY1LCJpYXQiOjE2MzIyNDg0NjUsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiIsIlJPTEVfU1VQRVJfQURNSU4iXX0.34ig04jUU8-CGQif-mH9-0Iuf6w-RAUO2L-Si_HkicnxcU5xtFrt4dEXn3NITtoijGzlLU9_WObRC2TI9Zr6dw';
-const headers = {
-    'Authorization': `Bearer ${secret}`
-};
+const getToken = () => {
+    if (localStorage.getItem("currentUser") !== null) {
+        const storage = JSON.parse(localStorage.getItem("currentUser"));
+        return storage.token;
+    } else {
+        return "";
+    }
+}
 
 export const getPosts = async () => {
-    return await axios.get('api/posts/all', {headers});
+    return await axios.get('api/posts/all', {headers: {Authorization: `Bearer ${getToken()}`}});
+}
+
+export const getComments = async (postId) => {
+    return await axios.get(`api/comments/${postId}`, {headers: {Authorization: `Bearer ${getToken()}`}});
+}
+
+export const createComment = async (comment) => {
+    await axios.post('api/comments/save', comment, {headers: {Authorization: `Bearer ${getToken()}`}});
 }
 
 export const createPost = async (post) => {
-    await axios.post('api/posts/save', post, {headers});
+    await axios.post('api/posts/save', post, {headers: {Authorization: `Bearer ${getToken()}`}});
 }
 
 export const login = async (user) => {
@@ -18,6 +30,11 @@ export const login = async (user) => {
 }
 
 export const register = async (user) => {
-    return await axios.post('api/user/register', {headers}, user);
+    return await axios.post('api/user/register', user, {headers: {Authorization: `Bearer ${getToken()}`}});
+}
+
+export const vote = async (vote) => {
+    console.log(vote);
+    return await axios.post('api/vote', vote, {headers: {Authorization: `Bearer ${getToken()}`}});
 }
 

@@ -11,5 +11,5 @@ import org.hibernate.validator.constraints.Range;
 public class VoteDto {
     @Range(min = -1, max = 1, message = "Vote not valid")
     private int direction;
-    private Long postId;
+    private Long id;
 }

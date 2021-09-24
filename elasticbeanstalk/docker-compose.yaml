@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  backend:
+    image: "egorkra/radit:latest"
+    ports:
+      - "80:8080"
+    restart: "always"
+    environment:
+      PASSWORD: ${ADMIN}
+      JWT: ${JWT_SECRET}
+      SPRING_DATASOURCE_URL: ${DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_PROFILES_ACTIVE: dev

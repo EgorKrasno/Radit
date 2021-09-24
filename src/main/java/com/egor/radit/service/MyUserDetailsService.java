@@ -40,16 +40,16 @@ public class MyUserDetailsService implements UserDetailsService {
         return new UserPrincipal(user);
     }
 
-    public void register(User request) throws RaditException {
+    public User register(User request) throws RaditException {
         validateUser(request);
         User newUser = new User();
-        newUser.setName(request.getName());
         newUser.setUsername(request.getUsername());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
 
         Role userRole = roleRepository.findByName("ROLE_USER");
         newUser.getRoles().add(userRole);
         userRepository.save(newUser);
+        return newUser;
     }
 
     public User login(User loginAttemptUser) {

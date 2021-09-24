@@ -2,7 +2,7 @@ import {Dialog, Transition} from "@headlessui/react";
 import {Fragment, useState} from "react";
 import {createPost} from "../service/service";
 
-const PostModal = ({closeModal, isOpen}) => {
+const PostModal = ({closeModal, isOpen, loadPosts}) => {
     const [title, setTitle] = useState();
     const [content, setContent] = useState();
 
@@ -13,6 +13,7 @@ const PostModal = ({closeModal, isOpen}) => {
         } catch (e) {
             console.log(e);
         }
+        loadPosts();
         closeModal();
     }
 
@@ -58,7 +59,7 @@ const PostModal = ({closeModal, isOpen}) => {
                             >
                                 Create a new post
                             </Dialog.Title>
-                            <div className="mt-2 space-y-6">
+                            <form className="mt-2 space-y-6" onSubmit={submitHandler}>
                                 <input type="text"
                                        className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
                                        placeholder="Title"
@@ -69,15 +70,11 @@ const PostModal = ({closeModal, isOpen}) => {
                                     id="comment" placeholder="Shenanigans" name="comment" rows="8" cols="40"
                                     onChange={e => setContent(e.target.value)}
                                 />
-                            </div>
-
-
-                            <div className="mt-4">
-                                <button onClick={submitHandler}
-                                        className="w-full cursor-pointer rounded-lg text-white focus:outline-none font-semibold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
+                                <button
+                                    className="w-full cursor-pointer rounded-lg text-white focus:outline-none font-semibold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
                                     Post 🚀
                                 </button>
-                            </div>
+                            </form>
                         </div>
                     </Transition.Child>
                 </div>
