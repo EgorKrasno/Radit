@@ -12,6 +12,7 @@ public class PostResponse {
     private String title;
     private String content;
     private String userName;
+    private String imageUrl;
     private int voteCount;
     private int commentCount;
     private int userVote;

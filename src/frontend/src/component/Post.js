@@ -1,6 +1,6 @@
 import {AiOutlineComment, FaArrowDown, FaArrowUp} from "react-icons/all";
 import {vote} from "../service/service";
-import {useState} from "react";
+import {useRef, useState} from "react";
 import Comments from "./Comments";
 
 const Post = ({post, openLoginModal, loggedIn}) => {
@@ -43,7 +43,8 @@ const Post = ({post, openLoginModal, loggedIn}) => {
                 </div>
                 <div className="flex-1">
                     <h1 className="text-center text-xl font-semibold">{post.title}</h1>
-                    <p className="">{post.content}</p>
+                    {post.imageUrl && <img className="max-h-72 max-w-72 mx-auto mb-2 mt-2" src={post.imageUrl} alt="image"/>}
+                    {post.content && <p className="" >{post.content}</p>}
                     <div className="flex justify-between items-center pt-2">
                         <button
                             onClick={() => setShowComments(!showComments)}

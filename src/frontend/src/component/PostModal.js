@@ -1,28 +1,53 @@
 import {Dialog, Transition} from "@headlessui/react";
-import {Fragment, useState} from "react";
+import {Fragment, useRef, useState} from "react";
 import {createPost} from "../service/service";
 
 const PostModal = ({closeModal, isOpen, loadPosts}) => {
     const [title, setTitle] = useState();
     const [content, setContent] = useState();
+    const [image, setImage] = useState({preview: "", raw: ""});
+    const inputRef = useRef(null);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState();
 
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
-            await createPost({title, content});
+            let formData = new FormData();
+            formData.append("title", title);
+            formData.append("content", content);
+            formData.append("file", image.raw);
+            await createPost(formData);
+            loadPosts();
+            close();
         } catch (e) {
-            console.log(e);
+            setError(e.response.data);
         }
-        loadPosts();
-        closeModal();
     }
+
+    const close = () => {
+        closeModal();
+        setImage({preview:"", raw: ""});
+        setTitle("");
+        setContent("");
+        setError("");
+    }
+
+    const handleImageUpload = e => {
+        if (e.target.files.length) {
+            setImage({
+                preview: URL.createObjectURL(e.target.files[0]),
+                raw: e.target.files[0]
+            });
+        }
+    };
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog
                 as="div"
-                className="fixed inset-0 z-10 overflow-y-auto"
-                onClose={closeModal}
+                className="fixed inset-0 z-30 overflow-y-auto"
+                onClose={close}
             >
                 <div className="min-h-screen px-4 text-center">
                     <Transition.Child
@@ -59,7 +84,8 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
                             >
                                 Create a new post
                             </Dialog.Title>
-                            <form className="mt-2 space-y-6" onSubmit={submitHandler}>
+                            {error && <p className="text-left font-semibold text-red-500">{error}</p>}
+                            <form className="mt-2 space-y-4" onSubmit={submitHandler}>
                                 <input type="text"
                                        className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
                                        placeholder="Title"
@@ -70,6 +96,21 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
                                     id="comment" placeholder="Shenanigans" name="comment" rows="8" cols="40"
                                     onChange={e => setContent(e.target.value)}
                                 />
+                                {image.preview &&
+                                <img src={image.preview} className="flex mx-auto max-h-72" alt="preview"/>}
+                                <div className="flex ">
+                                    <input
+                                        type="file"
+                                        hidden
+                                        ref={inputRef}
+                                        style={{display: "none"}}
+                                        onChange={handleImageUpload}
+                                    />
+                                    <button className="border-2 font-semibold border-red-500 rounded-full px-3 py-1 " onClick={(e) => {
+                                        e.preventDefault();
+                                        inputRef.current.click();
+                                    }}>Upload</button>
+                                </div>
                                 <button
                                     className="w-full cursor-pointer rounded-lg text-white focus:outline-none font-semibold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
                                     Post 🚀

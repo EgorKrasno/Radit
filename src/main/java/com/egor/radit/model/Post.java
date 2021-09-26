@@ -26,6 +26,9 @@ public class Post {
     @NotBlank(message = "Title cannot be empty or Null")
     private String title;
 
+    private String imagePath;
+    private String imageFileName;
+
     @Lob
     private String content;
 

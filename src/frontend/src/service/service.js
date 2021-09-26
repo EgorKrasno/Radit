@@ -21,8 +21,13 @@ export const createComment = async (comment) => {
     await axios.post('api/comments/save', comment, {headers: {Authorization: `Bearer ${getToken()}`}});
 }
 
-export const createPost = async (post) => {
-    await axios.post('api/posts/save', post, {headers: {Authorization: `Bearer ${getToken()}`}});
+export const createPost = async (formData) => {
+    await axios.post('api/posts/save', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${getToken()}`
+        }
+    });
 }
 
 export const login = async (user) => {
