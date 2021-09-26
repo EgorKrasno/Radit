@@ -15,6 +15,7 @@ http://acb-env.eba-b3m6utas.us-east-2.elasticbeanstalk.com/
 **Backend**
 - Spring
 - Authentication using JWTs and Spring Security
+- AWS S3 for storing images
 
 **CI/CD**
  - Frontend Maven Plugin to package React frontend into the spring backend
