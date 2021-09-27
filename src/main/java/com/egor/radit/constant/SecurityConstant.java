@@ -8,5 +8,5 @@ public class SecurityConstant {
     public static final String UNAUTHENTICATED_MESSAGE = "You need to log in to access this page";
     public static final String FORBIDDEN_MESSAGE = "You do not have permission to access this page";
     public static final String OPTIONS_HTTP_METHOD = "OPTIONS";
-    public static final String[] PUBLIC_URLS = {"/api/user/register", "/api/user/login", "/api/posts/all", "/", "/api/comments/?", "/static/**", "/manifest.json", "/*.png", "/*.ico"};
+    public static final String[] PUBLIC_URLS = {"/api/user/register", "/api/user/login", "/", "/api/posts/all", "/api/comments/?", "/static/**", "/manifest.json", "/*.png", "/*.ico"};
 }

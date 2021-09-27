@@ -1,9 +1,8 @@
 import axios from "axios";
 
 const getToken = () => {
-    if (localStorage.getItem("currentUser") !== null) {
-        const storage = JSON.parse(localStorage.getItem("currentUser"));
-        return storage.token;
+    if (localStorage.getItem("token") !== null) {
+        return JSON.parse(localStorage.getItem("token"));
     } else {
         return "";
     }
@@ -41,5 +40,9 @@ export const register = async (user) => {
 export const vote = async (vote) => {
     console.log(vote);
     return await axios.post('api/vote', vote, {headers: {Authorization: `Bearer ${getToken()}`}});
+}
+
+export const health = async () => {
+    return await axios.get('api/user/health', {headers: {Authorization: `Bearer ${getToken()}`}})
 }
 

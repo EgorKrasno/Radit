@@ -8,14 +8,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts/")
 @AllArgsConstructor
+@Validated
 public class PostController {
     private final PostService postService;
 
@@ -23,8 +29,8 @@ public class PostController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<Void> createPost(Authentication auth,
-                                           @RequestParam("title") String title,
-                                           @RequestParam(value = "content", required = false) String content,
+                                           @RequestParam("title") @NotBlank @Size(max=50) String title,
+                                           @RequestParam(value = "content", required = false) @Size(max = 500) String content,
                                            @RequestParam(value = "file", required = false) MultipartFile file
     ) throws RaditException {
         postService.save(auth, title, content, file);

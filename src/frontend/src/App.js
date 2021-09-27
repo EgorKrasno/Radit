@@ -1,6 +1,6 @@
 import {FiLogOut, GiTechnoHeart} from "react-icons/all";
 import {useEffect, useState} from 'react'
-import {getPosts, login, register} from "./service/service";
+import {getPosts, health, login, register} from "./service/service";
 import Post from "./component/Post";
 import PostModal from "./component/PostModal";
 import LoginModal from "./component/LoginModal";
@@ -8,7 +8,6 @@ import RegisterModal from "./component/RegisterModal";
 import SettingsMenu from "./component/SettingsMenu";
 
 const App = () => {
-    const [userData, setUserData] = useState({});
     const [loggedIn, setLoggedIn] = useState(false);
     const [isPostModalOpen, setIsPostModalOpen] = useState(false)
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
@@ -17,16 +16,24 @@ const App = () => {
     const [posts, setPosts] = useState({});
 
     useEffect(() => {
-        if (localStorage.getItem("currentUser") !== null) {
-            const storage = JSON.parse(localStorage.getItem("currentUser"));
-            setUserData(storage.user);
+        if (localStorage.getItem("token") !== null) {
+            const storage = JSON.parse(localStorage.getItem("token"));
             setLoggedIn(true);
+            fetchHealth();
         } else {
             setLoggedIn(false);
         }
 
         async function fetchData() {
             await loadPosts();
+        }
+
+        async function fetchHealth() {
+            const userHealth = await health();
+            if (!userHealth.data) {
+                localStorage.clear();
+                setLoggedIn(false);
+            }
         }
 
         fetchData();
@@ -62,17 +69,14 @@ const App = () => {
     }
 
     const loginActions = async (response) => {
-        const userObj = response.data;
         const token = response.headers["jwt-token"];
-        localStorage.setItem("currentUser", JSON.stringify({userObj, token}));
-        setUserData(userObj);
+        localStorage.setItem("token", JSON.stringify(token));
         setLoggedIn(true);
         await loadPosts();
     }
 
     const logout = async () => {
         localStorage.clear();
-        setUserData({});
         setLoggedIn(false);
         await loadPosts();
     }

@@ -35,10 +35,10 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<User> login(@RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody User user) {
         User loginUser = userService.login(user);
         HttpHeaders jwtHeader = getJwtHeader(new UserPrincipal(loginUser));
-        return new ResponseEntity<>(loginUser, jwtHeader, OK);
+        return new ResponseEntity<>(jwtHeader, OK);
     }
 
     @PostMapping("/role/save")
@@ -62,6 +62,11 @@ public class UserController {
     @GetMapping("/testadmin")
     public ResponseEntity<String> testAdmin(Authentication authentication) {
         return new ResponseEntity<>(authentication.getName(), HttpStatus.I_AM_A_TEAPOT);
+    }
+
+    @GetMapping("/user/health")
+    public ResponseEntity<Boolean> health(Authentication auth) {
+        return new ResponseEntity<>(userService.health(auth),HttpStatus.OK);
     }
 
     private HttpHeaders getJwtHeader(UserPrincipal userPrincipal) {

@@ -3,31 +3,43 @@ import {Fragment, useRef, useState} from "react";
 import {createPost} from "../service/service";
 
 const PostModal = ({closeModal, isOpen, loadPosts}) => {
-    const [title, setTitle] = useState();
-    const [content, setContent] = useState();
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
     const [image, setImage] = useState({preview: "", raw: ""});
     const inputRef = useRef(null);
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState();
+    const [loading, setLoading] = useState(false);
 
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
+            if (title === '') {
+                setError("At least put some effort into your 💩post");
+                return;
+            }
+            if (content === "" && image.raw === "") {
+                setError("At least put some effort into your 💩post")
+                return;
+            }
+
+            setLoading(true);
             let formData = new FormData();
             formData.append("title", title);
             formData.append("content", content);
             formData.append("file", image.raw);
             await createPost(formData);
-            loadPosts();
             close();
+            loadPosts();
         } catch (e) {
             setError(e.response.data);
+        } finally {
+            setLoading(false);
         }
     }
 
     const close = () => {
         closeModal();
-        setImage({preview:"", raw: ""});
+        setImage({preview: "", raw: ""});
         setTitle("");
         setContent("");
         setError("");
@@ -87,11 +99,13 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
                             {error && <p className="text-left font-semibold text-red-500">{error}</p>}
                             <form className="mt-2 space-y-4" onSubmit={submitHandler}>
                                 <input type="text"
+                                       disabled={loading}
                                        className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
                                        placeholder="Title"
                                        onChange={e => setTitle(e.target.value)}
                                 />
                                 <textarea
+                                    disabled={loading}
                                     className="flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
                                     id="comment" placeholder="Shenanigans" name="comment" rows="8" cols="40"
                                     onChange={e => setContent(e.target.value)}
@@ -102,18 +116,22 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
                                     <input
                                         type="file"
                                         hidden
+                                        disabled={loading}
                                         ref={inputRef}
                                         style={{display: "none"}}
                                         onChange={handleImageUpload}
                                     />
-                                    <button className="border-2 font-semibold border-red-500 rounded-full px-3 py-1 " onClick={(e) => {
-                                        e.preventDefault();
-                                        inputRef.current.click();
-                                    }}>Upload</button>
+                                    <button className="border-2 font-semibold border-red-500 rounded-full px-3 py-1 "
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                inputRef.current.click();
+                                            }}>Upload
+                                    </button>
                                 </div>
                                 <button
-                                    className="w-full cursor-pointer rounded-lg text-white focus:outline-none font-semibold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
-                                    Post 🚀
+                                    disabled={loading}
+                                    className={`${loading && 'opacity-75 cursor-not-allowed'} w-full cursor-pointer rounded-lg text-white focus:outline-none font-semibold p-2 bg-gradient-to-r from-red-600 to-yellow-500`}>
+                                    {loading ? "Shitposting 💩" : "Post 🚀"}
                                 </button>
                             </form>
                         </div>

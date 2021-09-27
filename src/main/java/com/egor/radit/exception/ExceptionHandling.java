@@ -8,6 +8,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.PAYLOAD_TOO_LARGE;
 
@@ -26,7 +28,12 @@ public class ExceptionHandling implements ErrorController {
     }
 
     @ExceptionHandler(SizeLimitExceededException.class)
-    public ResponseEntity<String> imageSizeLimitExceeded(){
+    public ResponseEntity<String> imageSizeLimitExceeded() {
         return new ResponseEntity<>("Images must be under 2MB", PAYLOAD_TOO_LARGE);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> validationFailed() {
+        return new ResponseEntity<>("Form data invalid", BAD_REQUEST);
     }
 }
