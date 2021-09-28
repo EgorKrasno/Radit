@@ -13,12 +13,12 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
-            if (title === '') {
-                setError("At least put some effort into your 💩post");
+            if (title.trim() === '') {
+                setError("At least put some effort into your 💩 post");
                 return;
             }
-            if (content === "" && image.raw === "") {
-                setError("At least put some effort into your 💩post")
+            if (content.trim() === "" && image.raw === "") {
+                setError("At least put some effort into your 💩 post")
                 return;
             }
 

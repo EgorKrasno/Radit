@@ -7,6 +7,7 @@ import LoginModal from "./component/LoginModal";
 import RegisterModal from "./component/RegisterModal";
 import SettingsMenu from "./component/SettingsMenu";
 import Board from "./component/Board";
+import Navbar from "./component/Navbar";
 
 const App = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -16,6 +17,7 @@ const App = () => {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({});
     const [page, setPage] = useState(0);
+    const [sort, setSort] = useState("voteCount");
 
     useEffect(() => {
         if (localStorage.getItem("token") !== null) {
@@ -41,16 +43,20 @@ const App = () => {
         fetchData();
     }, []);
 
-    const loadPosts = async (page) => {
-        console.log(page);
+
+    const loadPosts = async (page, sortBy = "voteCount") => {
         setLoading(true);
         try {
-            const response = await getPosts(page);
+            const response = await getPosts(page, sortBy);
             setData(response.data);
         } catch (err) {
             console.error(err);
         }
         setLoading(false);
+    }
+
+    const filterLoadPosts = async () => {
+
     }
 
     const handleLogin = async (user) => {
@@ -87,43 +93,16 @@ const App = () => {
 
     return (
         <div className="flex flex-col h-screen">
-            <div className="flex w-screen bg-white shadow-sm items-center justify-between h-14 px-8 z-20">
-                <div className="cursor-pointer flex items-center font-bold text-2xl text-red-500 space-x-2">
-                    <GiTechnoHeart size={34} className={"text-red-500"}/>
-                    <p className="hidden sm:inline-block">Radit</p>
-                </div>
-                <div className="space-x-2">
-                    {loggedIn ?
-                        <div className="flex space-x-4 items-center">
-                            <button onClick={() => setIsPostModalOpen(true)}
-                                    className="cursor-pointer rounded-lg text-white font-semibold py-1.5 px-4 bg-gradient-to-r from-red-600 to-yellow-500">
-                                Post 🚀
-                            </button>
-                            {/*<button onClick={logout}*/}
-                            {/*        className="flex cursor-pointer rounded-lg text-gray-900 font-semibold p-2 border-2 border-red-600">*/}
-                            {/*    <FiLogOut size="20" className="text-red-500"/>*/}
-                            {/*</button>*/}
-                            <SettingsMenu handleLogout={logout}/>
-                        </div>
-                        :
-                        <>
-                            <button onClick={() => setIsRegisterModalOpen(true)}
-                                    className="cursor-pointer rounded-lg text-gray-900 font-semibold py-1.5 px-4 border-2 border-red-500">
-                                Register
-                            </button>
-
-                            <button onClick={() => setIsLoginModalOpen(true)}
-                                    className="cursor-pointer rounded-lg text-gray-900 font-semibold py-1.5 px-4 border-2 border-red-500">
-                                Login
-                            </button>
-                        </>
-                    }
-                </div>
-            </div>
+            <Navbar loggedIn={loggedIn}
+                    logout={logout}
+                    setIsPostModalOpen={() => setIsPostModalOpen(true)}
+                    setIsRegisterModalOpen={() => setIsRegisterModalOpen(true)}
+                    setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>
 
             <div className="flex-1 overflow-y-auto bg-gray-200 pb-8 w-full">
                 {!(loading || data === null) &&
-                <Board data={data} loggedIn={loggedIn} loadPosts={loadPosts} page={page} setPage={setPage}
+                <Board data={data} sort={sort} setSort={setSort} loggedIn={loggedIn} loadPosts={loadPosts} page={page}
+                       setPage={setPage}
                        setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>}
             </div>
 
