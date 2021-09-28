@@ -8,7 +8,7 @@ const Comments = ({post, addLocalComment, loggedIn, openLoginModal}) => {
     const [comments, setComments] = useState({});
 
     const handleClick = async (e) => {
-        if(!loggedIn){
+        if (!loggedIn) {
             openLoginModal();
             return;
         }
@@ -35,7 +35,7 @@ const Comments = ({post, addLocalComment, loggedIn, openLoginModal}) => {
 
     return (
         <>
-            <div className="mt-5 divide-y divide-gray-300">
+            <div className="mt-5 divide-y divide-gray-300 sm:max-h-96 sm:overflow-y-auto comments">
                 {(comments !== null && comments.length > 0) && comments.map((c) => <Comment key={c.id} data={c}/>)}
             </div>
             <div className="border rounded-md my-3 flex flex-col focus-within:border-red-500">

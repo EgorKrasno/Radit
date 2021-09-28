@@ -27,6 +27,9 @@ const Board = ({data, loggedIn, setIsLoginModalOpen, loadPosts, page, setPage}) 
 
     return (
         <div className="flex flex-col justify-center items-center w-11/12 md:w-8/12 xl:w-5/12 mx-auto">
+
+
+
             {renderPosts()}
             <div className="mt-6 flex justify-between w-full">
                 <button
