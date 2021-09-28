@@ -1,6 +1,7 @@
 package com.egor.radit.service;
 
 import com.egor.radit.dto.PostResponse;
+import com.egor.radit.dto.PostResponseDto;
 import com.egor.radit.exception.RaditException;
 import com.egor.radit.model.Post;
 import com.egor.radit.model.User;
@@ -9,7 +10,13 @@ import com.egor.radit.repository.PostRepository;
 import com.egor.radit.repository.UserRepository;
 import com.egor.radit.repository.VoteRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +29,7 @@ import java.util.*;
 import static org.apache.http.entity.ContentType.*;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class PostService {
@@ -30,6 +37,9 @@ public class PostService {
     private final UserRepository userRepository;
     private final VoteRepository voteRepository;
     private final FileStore fileStore;
+
+    @Value("${BUCKET}")
+    private String bucket;
 
     public void save(Authentication auth, String title, String content, MultipartFile file) throws RaditException {
         Post newPost = new Post();
@@ -54,7 +64,7 @@ public class PostService {
             //get file metadata
             Map<String, String> metadata = new HashMap<>();
             metadata.put("Content-Type", file.getContentType());
-            String path = String.format("%s/%s", "radit-bucket", UUID.randomUUID());
+            String path = String.format("%s/%s", bucket, UUID.randomUUID());
             String fileName = String.format("%s", file.getOriginalFilename());
 
             try {
@@ -67,15 +77,23 @@ public class PostService {
             newPost.setImageFileName(fileName);
         }
 
-
         postRepository.save(newPost);
     }
 
     //Convert to Mapper method
-    public List<PostResponse> getAllPosts(Authentication auth) throws RaditException {
-        List<Post> posts = postRepository.findAllByOrderByVoteCountDesc();
-        List<PostResponse> response = new ArrayList<>();
-        for (Post post : posts) {
+    public PostResponseDto getAllPosts(Authentication auth, int pageNo, int pageSize, String sortBy) throws RaditException {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<Post> pageResult = postRepository.findAll(paging);
+
+        if (!pageResult.hasContent()) {
+            PostResponseDto response = new PostResponseDto();
+            response.setPosts(new ArrayList<>());
+            response.setHasNext(pageResult.hasNext());
+            return response;
+        }
+
+        List<PostResponse> postList = new ArrayList<>();
+        for (Post post : pageResult.getContent()) {
             PostResponse postResponse = new PostResponse();
             if (auth != null) {
                 Optional<User> user = userRepository.findByUsername(auth.getName());
@@ -90,13 +108,16 @@ public class PostService {
             postResponse.setVoteCount(post.getVoteCount());
             postResponse.setCommentCount(post.getCommentCount());
 
-            if (post.getImageFileName() != null){
-                postResponse.setImageUrl("https://s3.us-east-2.amazonaws.com/"+ post.getImagePath()+ "/" + post.getImageFileName());
+            if (post.getImageFileName() != null) {
+                postResponse.setImageUrl("https://s3.us-east-2.amazonaws.com/" + post.getImagePath() + "/" + post.getImageFileName());
             }
-
-            //check if user requesting posts has already votes on the specific post
-            response.add(postResponse);
+            postList.add(postResponse);
         }
+
+        PostResponseDto response = new PostResponseDto();
+        response.setPosts(postList);
+        response.setHasNext(pageResult.hasNext());
+
         return response;
     }
 }

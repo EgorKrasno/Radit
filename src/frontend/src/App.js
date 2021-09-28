@@ -6,6 +6,7 @@ import PostModal from "./component/PostModal";
 import LoginModal from "./component/LoginModal";
 import RegisterModal from "./component/RegisterModal";
 import SettingsMenu from "./component/SettingsMenu";
+import Board from "./component/Board";
 
 const App = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -13,7 +14,8 @@ const App = () => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false)
     const [loading, setLoading] = useState(true);
-    const [posts, setPosts] = useState({});
+    const [data, setData] = useState({});
+    const [page, setPage] = useState(0);
 
     useEffect(() => {
         if (localStorage.getItem("token") !== null) {
@@ -25,7 +27,7 @@ const App = () => {
         }
 
         async function fetchData() {
-            await loadPosts();
+            await loadPosts(0);
         }
 
         async function fetchHealth() {
@@ -39,11 +41,12 @@ const App = () => {
         fetchData();
     }, []);
 
-    const loadPosts = async () => {
+    const loadPosts = async (page) => {
+        console.log(page);
         setLoading(true);
         try {
-            const response = await getPosts();
-            setPosts(response.data);
+            const response = await getPosts(page);
+            setData(response.data);
         } catch (err) {
             console.error(err);
         }
@@ -72,13 +75,13 @@ const App = () => {
         const token = response.headers["jwt-token"];
         localStorage.setItem("token", JSON.stringify(token));
         setLoggedIn(true);
-        await loadPosts();
+        await loadPosts(0);
     }
 
     const logout = async () => {
         localStorage.clear();
         setLoggedIn(false);
-        await loadPosts();
+        await loadPosts(0);
     }
 
 
@@ -118,22 +121,14 @@ const App = () => {
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto bg-gray-200 pb-8">
-                <div className="flex flex-col justify-center items-center">
-                    {(!loading && posts.length > 0) ? posts.map((post) => <Post key={post.id}
-                                                                                post={post}
-                                                                                loggedIn={loggedIn}
-                                                                                openLoginModal={() => setIsLoginModalOpen(true)}
-                        />) :
-                        <div className="flex flex-col h-full mt-12">
-                            <p className="text-2xl">Be the first to make a post!</p>
-                        </div>
-
-                    }
-                </div>
+            <div className="flex-1 overflow-y-auto bg-gray-200 pb-8 w-full">
+                {!(loading || data === null) &&
+                <Board data={data} loggedIn={loggedIn} loadPosts={loadPosts} page={page} setPage={setPage}
+                       setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>}
             </div>
 
-            <PostModal isOpen={isPostModalOpen} loadPosts={loadPosts} closeModal={() => setIsPostModalOpen(false)}/>
+            <PostModal isOpen={isPostModalOpen} loadPosts={() => loadPosts(0)}
+                       closeModal={() => setIsPostModalOpen(false)}/>
             <LoginModal isOpen={isLoginModalOpen}
                         handleLogin={handleLogin}
                         closeModal={() => setIsLoginModalOpen(false)}/>

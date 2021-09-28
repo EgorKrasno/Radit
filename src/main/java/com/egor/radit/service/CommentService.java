@@ -44,6 +44,7 @@ public class CommentService {
     public List<CommentDto> getAllCommentsForPost(Long postId) throws RaditException {
         Post post = postRepository.findById(postId).orElseThrow(() -> new RaditException("Post not found"));
         List<Comment> foundComments = commentRepository.findByPost(post);
+
         List<CommentDto> response = new ArrayList<>();
         for (Comment comment : foundComments) {
             CommentDto commentDto = new CommentDto();

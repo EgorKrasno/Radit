@@ -13,7 +13,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         jdbc:
@@ -22,6 +22,7 @@ spring:
 
 AWSKEY: ""
 AWSSECRET: ""
+BUCKET: radit-bucket-dev
 
 jwt:
   secret: VerySecureLol

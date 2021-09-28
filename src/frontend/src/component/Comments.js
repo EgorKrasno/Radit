@@ -30,7 +30,7 @@ const Comments = ({post, addLocalComment, loggedIn, openLoginModal}) => {
     const loadComments = async () => {
         const response = await getComments(post.id);
         setComments(response.data);
-        console.log(response);
+        console.log(response.data);
     }
 
     return (

@@ -1,6 +1,8 @@
 server:
   port: 8080
 
+BUCKET: radit-bucket
+
 spring:
   servlet:
     multipart:

@@ -36,15 +36,4 @@ public class FileStore {
             throw new IllegalStateException("Failed to upload the file", e);
         }
     }
-
-    public byte[] download(String path, String key) {
-        try {
-            S3Object object = amazonS3.getObject(path, key);
-            S3ObjectInputStream objectContent = object.getObjectContent();
-            return IOUtils.toByteArray(objectContent);
-        } catch (AmazonServiceException | IOException e) {
-            throw new IllegalStateException("Failed to download the file", e);
-        }
-    }
-
 }

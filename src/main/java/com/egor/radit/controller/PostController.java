@@ -1,6 +1,7 @@
 package com.egor.radit.controller;
 
 import com.egor.radit.dto.PostResponse;
+import com.egor.radit.dto.PostResponseDto;
 import com.egor.radit.exception.RaditException;
 import com.egor.radit.service.PostService;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts/")
@@ -29,7 +31,7 @@ public class PostController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<Void> createPost(Authentication auth,
-                                           @RequestParam("title") @NotBlank @Size(max=50) String title,
+                                           @RequestParam("title") @NotBlank @Size(max = 50) String title,
                                            @RequestParam(value = "content", required = false) @Size(max = 500) String content,
                                            @RequestParam(value = "file", required = false) MultipartFile file
     ) throws RaditException {
@@ -39,7 +41,11 @@ public class PostController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<List<PostResponse>> getAllPosts(Authentication auth) throws RaditException {
-        return new ResponseEntity<>(postService.getAllPosts(auth), HttpStatus.OK);
+    public ResponseEntity<PostResponseDto> getAllPosts(Authentication auth,
+                                                       @RequestParam(defaultValue = "0") int pageNo,
+                                                       @RequestParam(defaultValue = "7") int pageSize,
+                                                       @RequestParam(defaultValue = "voteCount") String sortBy
+    ) throws RaditException {
+        return new ResponseEntity<>(postService.getAllPosts(auth, pageNo, pageSize, sortBy), HttpStatus.OK);
     }
 }
