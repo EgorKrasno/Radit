@@ -8,6 +8,7 @@ import RegisterModal from "./component/RegisterModal";
 import SettingsMenu from "./component/SettingsMenu";
 import Board from "./component/Board";
 import Navbar from "./component/Navbar";
+import {Toaster} from "react-hot-toast";
 
 const App = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -33,8 +34,9 @@ const App = () => {
         }
 
         async function fetchHealth() {
-            const userHealth = await health();
-            if (!userHealth.data) {
+            try {
+                await health();
+            } catch (e) {
                 localStorage.clear();
                 setLoggedIn(false);
             }
@@ -53,10 +55,6 @@ const App = () => {
             console.error(err);
         }
         setLoading(false);
-    }
-
-    const filterLoadPosts = async () => {
-
     }
 
     const handleLogin = async (user) => {
@@ -91,30 +89,46 @@ const App = () => {
     }
 
 
-    return (
-        <div className="flex flex-col h-screen">
-            <Navbar loggedIn={loggedIn}
-                    logout={logout}
-                    setIsPostModalOpen={() => setIsPostModalOpen(true)}
-                    setIsRegisterModalOpen={() => setIsRegisterModalOpen(true)}
-                    setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>
+    return (<>
+            <div className="flex flex-col h-screen">
+                <Navbar loggedIn={loggedIn}
+                        logout={logout}
+                        setIsPostModalOpen={() => setIsPostModalOpen(true)}
+                        setIsRegisterModalOpen={() => setIsRegisterModalOpen(true)}
+                        setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>
 
-            <div className="flex-1 overflow-y-auto bg-gray-200 pb-8 w-full">
-                {!(loading || data === null) &&
-                <Board data={data} sort={sort} setSort={setSort} loggedIn={loggedIn} loadPosts={loadPosts} page={page}
-                       setPage={setPage}
-                       setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>}
+                <div className="flex-1 overflow-y-auto bg-gray-200 pb-8 w-full">
+                    {!(loading || data === null) &&
+                    <Board data={data} sort={sort} setSort={setSort} loggedIn={loggedIn} loadPosts={loadPosts}
+                           page={page}
+                           setPage={setPage}
+                           setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>}
+                </div>
+
+                <PostModal isOpen={isPostModalOpen} loadPosts={() => loadPosts(0)}
+                           closeModal={() => setIsPostModalOpen(false)}/>
+                <LoginModal isOpen={isLoginModalOpen}
+                            handleLogin={handleLogin}
+                            closeModal={() => setIsLoginModalOpen(false)}/>
+                <RegisterModal e isOpen={isRegisterModalOpen}
+                               handleRegister={handleRegister}
+                               closeModal={() => setIsRegisterModalOpen(false)}/>
             </div>
-
-            <PostModal isOpen={isPostModalOpen} loadPosts={() => loadPosts(0)}
-                       closeModal={() => setIsPostModalOpen(false)}/>
-            <LoginModal isOpen={isLoginModalOpen}
-                        handleLogin={handleLogin}
-                        closeModal={() => setIsLoginModalOpen(false)}/>
-            <RegisterModal e isOpen={isRegisterModalOpen}
-                           handleRegister={handleRegister}
-                           closeModal={() => setIsRegisterModalOpen(false)}/>
-        </div>
+            <Toaster
+                toastOptions={{
+                    success: {
+                        style: {
+                            background: '#E0F5E9',
+                        },
+                    },
+                    error: {
+                        style: {
+                            background: '#FADEDE',
+                        },
+                    },
+                }}
+            />
+        </>
     );
 }
 

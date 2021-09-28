@@ -2,6 +2,7 @@ import {useParams} from "react-router-dom";
 import Comment from "./Comment";
 import {useEffect, useState} from "react";
 import {createComment, getComments} from "../service/service";
+import toast, { Toaster } from 'react-hot-toast';
 
 const Comments = ({post, addLocalComment, loggedIn, openLoginModal}) => {
     const [comment, setComment] = useState("");
@@ -13,9 +14,15 @@ const Comments = ({post, addLocalComment, loggedIn, openLoginModal}) => {
             return;
         }
         e.preventDefault();
-        addLocalComment();
-        await createComment({postId: post.id, text: comment});
-        await loadComments();
+        try {
+            await createComment({postId: post.id, text: comment});
+            addLocalComment();
+            toast.success("Comment created");
+            await loadComments();
+        } catch (e) {
+            toast.error("Something went wrong");
+            console.error(e.response.data);
+        }
         setComment("");
     }
 

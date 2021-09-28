@@ -8,8 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
@@ -21,7 +24,7 @@ public class CommentController {
 
     @PostMapping("/save")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Void> createComment(Authentication auth, @RequestBody CommentDto commentDto) throws RaditException {
+    public ResponseEntity<Void> createComment(Authentication auth, @RequestBody @Valid CommentDto commentDto) throws RaditException {
         commentService.save(auth, commentDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

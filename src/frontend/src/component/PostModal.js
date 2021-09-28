@@ -1,6 +1,7 @@
 import {Dialog, Transition} from "@headlessui/react";
 import {Fragment, useRef, useState} from "react";
 import {createPost} from "../service/service";
+import toast from "react-hot-toast";
 
 const PostModal = ({closeModal, isOpen, loadPosts}) => {
     const [title, setTitle] = useState("");
@@ -28,6 +29,7 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
             formData.append("content", content);
             formData.append("file", image.raw);
             await createPost(formData);
+            toast.success("Post created, Very Nice!");
             close();
             loadPosts();
         } catch (e) {

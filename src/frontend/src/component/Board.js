@@ -1,6 +1,7 @@
 import Post from "./Post";
 import {RadioGroup} from '@headlessui/react'
 import {GiNewBorn, GiNewShoot, GoFlame} from "react-icons/all";
+import toast from "react-hot-toast";
 
 const Board = ({data, loggedIn, setIsLoginModalOpen, loadPosts, page, setPage, sort, setSort}) => {
 
@@ -71,8 +72,7 @@ const Board = ({data, loggedIn, setIsLoginModalOpen, loadPosts, page, setPage, s
                 </button>
             </div>
         </div>
-    )
-        ;
+    );
 }
 
 export default Board;

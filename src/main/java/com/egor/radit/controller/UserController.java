@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -65,8 +66,9 @@ public class UserController {
     }
 
     @GetMapping("/user/health")
-    public ResponseEntity<Boolean> health(Authentication auth) {
-        return new ResponseEntity<>(userService.health(auth),HttpStatus.OK);
+    public ResponseEntity<?> health(Authentication auth) {
+        if (userService.health(auth)) return new ResponseEntity<>(OK);
+        return new ResponseEntity<>(BAD_REQUEST);
     }
 
     private HttpHeaders getJwtHeader(UserPrincipal userPrincipal) {
