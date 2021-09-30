@@ -1,7 +1,9 @@
 package com.egor.radit.util;
 
 import com.egor.radit.model.Role;
+import com.egor.radit.model.Section;
 import com.egor.radit.model.User;
+import com.egor.radit.repository.SectionRepository;
 import com.egor.radit.repository.UserRepository;
 import com.egor.radit.service.MyUserDetailsService;
 import lombok.AllArgsConstructor;
@@ -17,13 +19,19 @@ import java.util.ArrayList;
 public class CommandLineStartupRunner implements CommandLineRunner {
     private final MyUserDetailsService userService;
     private final UserRepository userRepository;
+    private final SectionRepository sectionRepository;
 
     @Value("${PASSWORD}")
     private String secret;
 
     @Override
     public void run(String... args) throws Exception {
-        if(userRepository.findByUsername("admin").isPresent()){
+        sectionRepository.save(new Section(1L, "rarememes"));
+        sectionRepository.save(new Section(2L, "beans"));
+        sectionRepository.save(new Section(3L, "programming"));
+        sectionRepository.save(new Section(4L, "random"));
+
+        if (userRepository.findByUsername("admin").isPresent()) {
             return;
         }
         userService.saveRole(new Role(1L, "ROLE_USER"));

@@ -40,5 +40,10 @@ public class Post {
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "sectionId", referencedColumnName = "sectionId")
+    private Section section;
+
+
     private Instant createdDate;
 }

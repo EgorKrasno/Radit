@@ -36,7 +36,7 @@ const Post = ({post, openLoginModal, loggedIn}) => {
     }
 
     return (
-        <div className="flex bg-white rounded-lg shadow-md px-4 py-3 flex flex-col mt-5 w-full">
+        <div className="flex bg-white sm:rounded-lg shadow-md px-4 py-3 flex flex-col mt-5 w-full">
             <div className="flex flex-1">
                 <div className="flex flex-col justify-center items-center pr-4 space-y-1">
                     <div onClick={() => handleVote(1)}>

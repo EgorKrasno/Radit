@@ -4,9 +4,11 @@ import com.egor.radit.dto.PostResponse;
 import com.egor.radit.dto.PostResponseDto;
 import com.egor.radit.exception.RaditException;
 import com.egor.radit.model.Post;
+import com.egor.radit.model.Section;
 import com.egor.radit.model.User;
 import com.egor.radit.model.Vote;
 import com.egor.radit.repository.PostRepository;
+import com.egor.radit.repository.SectionRepository;
 import com.egor.radit.repository.UserRepository;
 import com.egor.radit.repository.VoteRepository;
 import lombok.AllArgsConstructor;
@@ -36,15 +38,19 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final VoteRepository voteRepository;
+    private final SectionRepository sectionRepository;
     private final FileStore fileStore;
 
     @Value("${BUCKET}")
     private String bucket;
 
-    public void save(Authentication auth, String title, String content, MultipartFile file) throws RaditException {
+    public void save(Authentication auth, String title, String content, String sectionName, MultipartFile file) throws RaditException {
         Post newPost = new Post();
         User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new RaditException("User not found"));
         newPost.setUser(user);
+
+        Section section = sectionRepository.findByName(sectionName).orElseThrow(() -> new RaditException("Section not found"));
+
 
         newPost.setTitle(title);
         newPost.setContent(content);
@@ -52,6 +58,7 @@ public class PostService {
         newPost.setCreatedDate(Instant.now());
         newPost.setVoteCount(0);
         newPost.setCommentCount(0);
+        newPost.setSection(section);
 
         if (file != null) {
             if (!Arrays.asList(IMAGE_PNG.getMimeType(),
@@ -81,9 +88,12 @@ public class PostService {
     }
 
     //Convert to Mapper method
-    public PostResponseDto getAllPosts(Authentication auth, int pageNo, int pageSize, String sortBy) throws RaditException {
+    public PostResponseDto getAllPosts(Authentication auth, int pageNo, int pageSize, String sortBy, String section) throws RaditException {
+
+        Section foundSection = sectionRepository.findByName(section).orElseThrow(() -> new RaditException("Section not found"));
+
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
-        Page<Post> pageResult = postRepository.findAll(paging);
+        Page<Post> pageResult = postRepository.findAllBySection(foundSection, paging);
 
         if (!pageResult.hasContent()) {
             PostResponseDto response = new PostResponseDto();

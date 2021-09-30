@@ -1,14 +1,19 @@
-import {FiLogOut, GiTechnoHeart} from "react-icons/all";
+import {
+    AiFillHome,
+    GiCoffeeBeans,
+    GiDespair,
+    GiFossil,
+    GiPerspectiveDiceSixFacesRandom,
+} from "react-icons/all";
 import {useEffect, useState} from 'react'
 import {getPosts, health, login, register} from "./service/service";
-import Post from "./component/Post";
 import PostModal from "./component/PostModal";
 import LoginModal from "./component/LoginModal";
 import RegisterModal from "./component/RegisterModal";
-import SettingsMenu from "./component/SettingsMenu";
-import Board from "./component/Board";
 import Navbar from "./component/Navbar";
 import {Toaster} from "react-hot-toast";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
+import Home from "./component/Home";
 
 const App = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -19,6 +24,33 @@ const App = () => {
     const [data, setData] = useState({});
     const [page, setPage] = useState(0);
     const [sort, setSort] = useState("voteCount");
+
+    const sections = [
+        {
+            name: 'All',
+            href: '/All',
+            icon: () => <AiFillHome className="text-gray-900 mr-2" size={22}/>
+        },
+        {
+            name: 'RareMemes',
+            href: '/RareMemes',
+            icon: () => <GiFossil className="text-yellow-500 mr-2" size={22}/>
+        },
+        {
+            name: 'Beans',
+            href: '/Beans',
+            icon: () => <GiCoffeeBeans className="text-yellow-900 mr-2" size={22}/>
+        }, {
+            name: 'Programming',
+            href: '/Programming',
+            icon: () => <GiDespair className="text-blue-600 mr-2" size={22}/>
+        },
+        {
+            name: 'Random',
+            href: '/Random',
+            icon: () => <GiPerspectiveDiceSixFacesRandom className="text-red-600 mr-2" size={22}/>
+        }
+    ]
 
     useEffect(() => {
         if (localStorage.getItem("token") !== null) {
@@ -46,10 +78,14 @@ const App = () => {
     }, []);
 
 
-    const loadPosts = async (page, sortBy = "voteCount") => {
+    const loadPosts = async (page = 0, sortBy=sort, section = window.location.pathname.slice(1)) => {
+        //defaults only happen on page refresh
         setLoading(true);
+        // console.log(page);
+        // console.log(sortBy);
+        // console.log(section);
         try {
-            const response = await getPosts(page, sortBy);
+            const response = await getPosts(page, sortBy, section);
             setData(response.data);
         } catch (err) {
             console.error(err);
@@ -89,23 +125,24 @@ const App = () => {
     }
 
 
-    return (<>
+    return (
+        <BrowserRouter>
             <div className="flex flex-col h-screen">
                 <Navbar loggedIn={loggedIn}
                         logout={logout}
+                        sections={sections}
+                        sort={sort}
+                        setSort={setSort}
+                        loadPosts={loadPosts}
+                        setPage={setPage}
                         setIsPostModalOpen={() => setIsPostModalOpen(true)}
                         setIsRegisterModalOpen={() => setIsRegisterModalOpen(true)}
                         setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>
 
-                <div className="flex-1 overflow-y-auto bg-gray-200 pb-8 w-full">
-                    {!(loading || data === null) &&
-                    <Board data={data} sort={sort} setSort={setSort} loggedIn={loggedIn} loadPosts={loadPosts}
-                           page={page}
-                           setPage={setPage}
-                           setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>}
-                </div>
 
-                <PostModal isOpen={isPostModalOpen} loadPosts={() => loadPosts(0)}
+                <PostModal isOpen={isPostModalOpen}
+                           sections={sections}
+                           loadPosts={() => loadPosts(0)}
                            closeModal={() => setIsPostModalOpen(false)}/>
                 <LoginModal isOpen={isLoginModalOpen}
                             handleLogin={handleLogin}
@@ -113,22 +150,39 @@ const App = () => {
                 <RegisterModal e isOpen={isRegisterModalOpen}
                                handleRegister={handleRegister}
                                closeModal={() => setIsRegisterModalOpen(false)}/>
+
+
+                <Toaster
+                    toastOptions={{
+                        success: {
+                            style: {
+                                background: '#E0F5E9',
+                            },
+                        },
+                        error: {
+                            style: {
+                                background: '#FADEDE',
+                            },
+                        },
+                    }}
+                />
+                <Switch>
+                    {sections.map(s =>
+                        <Route path={s.path} key={s.name}>
+                            <Home sort={sort}
+                                  data={data}
+                                  setSort={setSort}
+                                  loadPosts={loadPosts}
+                                  page={page}
+                                  loggedIn={loggedIn}
+                                  setPage={setPage}
+                                  setIsLoginModalOpen={setIsLoginModalOpen}
+                                  loading={loading}/>
+                        </Route>
+                    )}
+                </Switch>
             </div>
-            <Toaster
-                toastOptions={{
-                    success: {
-                        style: {
-                            background: '#E0F5E9',
-                        },
-                    },
-                    error: {
-                        style: {
-                            background: '#FADEDE',
-                        },
-                    },
-                }}
-            />
-        </>
+        </BrowserRouter>
     );
 }
 

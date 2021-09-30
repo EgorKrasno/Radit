@@ -8,8 +8,8 @@ const getToken = () => {
     }
 }
 
-export const getPosts = async (pageNo, sortBy) => {
-    return await axios.get(`api/posts/all`, {headers: {Authorization: `Bearer ${getToken()}`}, params:{pageNo, sortBy}});
+export const getPosts = async (pageNo, sortBy, section) => {
+    return await axios.get(`api/posts/all`, {headers: {Authorization: `Bearer ${getToken()}`}, params:{pageNo, sortBy, section}});
 }
 
 export const getComments = async (postId) => {

@@ -32,10 +32,11 @@ public class PostController {
     )
     public ResponseEntity<Void> createPost(Authentication auth,
                                            @RequestParam("title") @NotBlank @Size(max = 50) String title,
+                                           @RequestParam(value = "section", defaultValue = "random") @NotBlank String section,
                                            @RequestParam(value = "content", required = false) @Size(max = 500) String content,
                                            @RequestParam(value = "file", required = false) MultipartFile file
     ) throws RaditException {
-        postService.save(auth, title, content, file);
+        postService.save(auth, title, content, section, file);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -44,8 +45,9 @@ public class PostController {
     public ResponseEntity<PostResponseDto> getAllPosts(Authentication auth,
                                                        @RequestParam(defaultValue = "0") int pageNo,
                                                        @RequestParam(defaultValue = "7") int pageSize,
-                                                       @RequestParam(defaultValue = "voteCount") String sortBy
+                                                       @RequestParam(defaultValue = "voteCount") String sortBy,
+                                                       @RequestParam(defaultValue = "all") String section
     ) throws RaditException {
-        return new ResponseEntity<>(postService.getAllPosts(auth, pageNo, pageSize, sortBy), HttpStatus.OK);
+        return new ResponseEntity<>(postService.getAllPosts(auth, pageNo, pageSize, sortBy, section), HttpStatus.OK);
     }
 }
