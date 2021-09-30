@@ -1,6 +1,6 @@
 import {
     AiFillHome,
-    FiChevronDown, GiCoffeeBeans, GiDespair, GiFossil, GiNewShoot,
+    FiChevronDown, GiChiliPepper, GiCoffeeBeans, GiDespair, GiFossil, GiNewShoot,
     GiPerspectiveDiceSixFacesRandom,
     GiTechnoHeart, GoFlame,
     RiHomeHeartFill
@@ -9,6 +9,7 @@ import SettingsMenu from "./SettingsMenu";
 import {Popover, RadioGroup, Transition} from '@headlessui/react'
 import {Fragment, useEffect, useState} from 'react'
 import {Link, useLocation} from "react-router-dom";
+import {sections} from "../data/Data";
 
 const Navbar = ({
                     loggedIn,
@@ -16,7 +17,6 @@ const Navbar = ({
                     setIsPostModalOpen,
                     setIsRegisterModalOpen,
                     setIsLoginModalOpen,
-                    sections,
                     sort,
                     setSort,
                     setPage,
@@ -40,9 +40,9 @@ const Navbar = ({
     return (
         <div className="flex w-screen bg-white shadow-sm items-center justify-between h-14 px-8 z-20">
             <div className="flex">
-                <div className="cursor-pointer flex items-center font-bold text-2xl text-red-500 space-x-2">
-                    <GiTechnoHeart size={34} className={"text-red-500"}/>
-                    <p className="hidden sm:inline-block">Radit</p>
+                <div className="cursor-pointer flex items-center text-3xl text-red-500 space-x-1">
+                    <GiChiliPepper size={34} className={"text-red-500"}/>
+                    <p className="hidden sm:inline-block font-custom">Spicy</p>
                 </div>
 
 
@@ -110,24 +110,24 @@ const Navbar = ({
                 <RadioGroup as="div" className="flex items-center" value={sort} onChange={async (e) => {
                     setSort(e);
                     setPage(0);
-                    await loadPosts(0, e);
+                    await loadPosts(0, e, section.name);
                 }}>
                     <div className="flex flex-row ml-4 space-x-3">
                         <RadioGroup.Option value="voteCount">
                             {({checked}) => (
                                 <div
-                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-900 border-2 border-yellow-500'} flex items-center cursor-pointer rounded-full text-white font-semibold px-5 h-8`}>
-                                    <GoFlame className="mr-1"/>
-                                    <p>Top</p>
+                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} flex items-center cursor-pointer rounded-full text-white font-semibold px-5 h-8`}>
+                                    <GoFlame className="mr-1" size={20}/>
+                                    <p className="font-custom text-lg">Hot</p>
                                 </div>
                             )}
                         </RadioGroup.Option>
                         <RadioGroup.Option value="createdDate">
                             {({checked}) => (
                                 <div
-                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-900 border-2 border-yellow-500'} flex items-center cursor-pointer rounded-full text-white font-semibold px-5 h-8`}>
+                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} flex items-center cursor-pointer rounded-full text-white font-semibold px-5 h-8`}>
                                     <GiNewShoot className="mr-1"/>
-                                    <p>New</p>
+                                    <p className='font-bold text-lg'>New</p>
                                 </div>
                             )}
                         </RadioGroup.Option>

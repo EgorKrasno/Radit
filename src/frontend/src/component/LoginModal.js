@@ -61,7 +61,7 @@ const LoginModal = ({closeModal, isOpen, handleLogin}) => {
                             className="inline-block w-full max-w-lg px-8 py-6 overflow-hidden align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                             <Dialog.Title
                                 as="h3"
-                                className="text-lg font-medium text-center text-gray-900 pb-3"
+                                className="text-3xl font-custom font-bold text-center text-gray-900 pb-3"
                             >
                                 Login
                             </Dialog.Title>
@@ -78,7 +78,7 @@ const LoginModal = ({closeModal, isOpen, handleLogin}) => {
                                        onChange={e => setPassword(e.target.value)}
                                 />
                                 <button
-                                    className="mt-4 w-full cursor-pointer rounded-lg text-white focus:outline-none font-semibold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
+                                    className="mt-6 w-full font-custom cursor-pointer rounded-lg text-white focus:outline-none text-xl font-bold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
                                     Login
                                 </button>
                             </form>

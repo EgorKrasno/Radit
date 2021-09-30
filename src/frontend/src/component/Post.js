@@ -50,7 +50,7 @@ const Post = ({post, openLoginModal, loggedIn}) => {
                     </div>
                 </div>
                 <div className="flex-1">
-                    <h1 className="text-center text-xl font-semibold">{post.title}</h1>
+                    <h1 className="text-center text-xl font-semibold">{post.title[0].toUpperCase() + post.title.substring(1)}</h1>
                     {post.imageUrl &&
                     <img className="max-h-72 max-w-72 mx-auto mb-2 mt-2" src={post.imageUrl} alt="image"/>}
                     {post.content && <p className="">{post.content}</p>}

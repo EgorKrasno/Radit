@@ -4,14 +4,10 @@ import {createPost} from "../service/service";
 import toast from "react-hot-toast";
 import {
     FiChevronUp,
-    GiCoffeeBeans,
-    GiDespair,
-    GiFossil,
-    GiPerspectiveDiceSixFacesRandom
 } from "react-icons/all";
+import {postModalSections} from "../data/Data";
 
-
-const PostModal = ({closeModal, isOpen, loadPosts, url}) => {
+const PostModal = ({closeModal, isOpen, loadPosts}) => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [image, setImage] = useState({preview: "", raw: ""});
@@ -19,36 +15,11 @@ const PostModal = ({closeModal, isOpen, loadPosts, url}) => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-
-    //TODO: Refactor this mess into somewhere else
-    const sections = [
-        {
-            name: 'RareMemes',
-            href: '/RareMemes',
-            icon: () => <GiFossil className="text-yellow-500 mr-2" size={22}/>
-        },
-        {
-            name: 'Beans',
-            href: '/Beans',
-            icon: () => <GiCoffeeBeans className="text-yellow-900 mr-2" size={22}/>
-        }, {
-            name: 'Programming',
-            href: '/Programming',
-            icon: () => <GiDespair className="text-blue-600 mr-2" size={22}/>
-        },
-        {
-            name: 'Random',
-            href: '/Random',
-            icon: () => <GiPerspectiveDiceSixFacesRandom className="text-red-600 mr-2" size={22}/>
-        }
-    ]
-
-    const [section, setSection] = useState(sections[0]);
+    const [section, setSection] = useState(postModalSections[0]);
     useEffect(() => {
         //holy molly how the hell is this monstrosity actually working
-        if (isOpen) setSection(sections.filter(s => s.name === window.location.pathname.slice(1))[0] || sections[0]);
+        if (isOpen) setSection(postModalSections.filter(s => s.name === window.location.hash.substring(2))[0] || postModalSections[0]);
     }, [isOpen]);
-
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -69,7 +40,7 @@ const PostModal = ({closeModal, isOpen, loadPosts, url}) => {
             formData.append("file", image.raw);
             formData.append("section", section.name.toLowerCase())
             await createPost(formData);
-            toast.success("Post created, Very Nice!");
+            toast.success("Now that is spicy, Very Nice!");
             close();
             loadPosts();
         } catch (e) {
@@ -101,9 +72,7 @@ const PostModal = ({closeModal, isOpen, loadPosts, url}) => {
             <Dialog
                 as="div"
                 className="fixed inset-0 z-30 overflow-y-auto"
-                onClose={() => {
-                    close();
-                }}
+                onClose={close}
             >
                 <div className="min-h-screen px-4 text-center">
                     <Transition.Child
@@ -136,9 +105,9 @@ const PostModal = ({closeModal, isOpen, loadPosts, url}) => {
                             className="inline-block w-full max-w-lg px-8 py-6 overflow-hidden align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                             <Dialog.Title
                                 as="h3"
-                                className="text-lg font-medium text-center text-gray-900 pb-3"
+                                className="text-lg font-bold font-bold text-3xl font-custom text-center text-gray-900 pb-3"
                             >
-                                Create a new post
+                                Create a spicy post
                             </Dialog.Title>
                             {error && <p className="text-left font-semibold text-red-500">{error}</p>}
                             <form className="mt-2 space-y-4 w-full" onSubmit={submitHandler}>
@@ -203,7 +172,7 @@ const PostModal = ({closeModal, isOpen, loadPosts, url}) => {
                                                                 <div
                                                                     className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                                                                     <div className="relative grid gap-8 bg-white p-7">
-                                                                        {sections.map((item) => (
+                                                                        {postModalSections.map((item) => (
                                                                             <div
                                                                                 onClick={() => {
                                                                                     setSection(item)
@@ -235,7 +204,7 @@ const PostModal = ({closeModal, isOpen, loadPosts, url}) => {
                                 </div>
                                 <button
                                     disabled={loading}
-                                    className={`${loading && 'opacity-75 cursor-not-allowed'} w-full cursor-pointer rounded-lg text-white focus:outline-none font-semibold p-2 bg-gradient-to-r from-red-600 to-yellow-500`}>
+                                    className={`${loading && 'opacity-75 cursor-not-allowed'} w-full cursor-pointer rounded-lg text-white focus:outline-none font-bold font-custom text-2xl p-2 bg-gradient-to-r from-red-600 to-yellow-500`}>
                                     {loading ? "Shitposting 💩" : "Post 🚀"}
                                 </button>
                             </form>

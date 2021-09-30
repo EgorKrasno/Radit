@@ -1,9 +1,6 @@
 import Post from "./Post";
-import {useEffect} from "react";
 
 const Board = ({data, loggedIn, setIsLoginModalOpen, loadPosts, page, setPage}) => {
-
-
 
     const handlePageChange = (direction) => {
         if (direction === 1) {

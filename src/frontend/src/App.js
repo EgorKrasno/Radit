@@ -1,10 +1,3 @@
-import {
-    AiFillHome,
-    GiCoffeeBeans,
-    GiDespair,
-    GiFossil,
-    GiPerspectiveDiceSixFacesRandom,
-} from "react-icons/all";
 import {useEffect, useState} from 'react'
 import {getPosts, health, login, register} from "./service/service";
 import PostModal from "./component/PostModal";
@@ -12,8 +5,9 @@ import LoginModal from "./component/LoginModal";
 import RegisterModal from "./component/RegisterModal";
 import Navbar from "./component/Navbar";
 import {Toaster} from "react-hot-toast";
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import {HashRouter, Route, Switch} from "react-router-dom";
 import Home from "./component/Home";
+import {sections} from "./data/Data";
 
 const App = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -24,33 +18,6 @@ const App = () => {
     const [data, setData] = useState({});
     const [page, setPage] = useState(0);
     const [sort, setSort] = useState("voteCount");
-
-    const sections = [
-        {
-            name: 'All',
-            href: '/All',
-            icon: () => <AiFillHome className="text-gray-900 mr-2" size={22}/>
-        },
-        {
-            name: 'RareMemes',
-            href: '/RareMemes',
-            icon: () => <GiFossil className="text-yellow-500 mr-2" size={22}/>
-        },
-        {
-            name: 'Beans',
-            href: '/Beans',
-            icon: () => <GiCoffeeBeans className="text-yellow-900 mr-2" size={22}/>
-        }, {
-            name: 'Programming',
-            href: '/Programming',
-            icon: () => <GiDespair className="text-blue-600 mr-2" size={22}/>
-        },
-        {
-            name: 'Random',
-            href: '/Random',
-            icon: () => <GiPerspectiveDiceSixFacesRandom className="text-red-600 mr-2" size={22}/>
-        }
-    ]
 
     useEffect(() => {
         if (localStorage.getItem("token") !== null) {
@@ -78,14 +45,13 @@ const App = () => {
     }, []);
 
 
-    const loadPosts = async (page = 0, sortBy=sort, section = window.location.pathname.slice(1)) => {
-        //defaults only happen on page refresh
+    const loadPosts = async (page = 0, sortBy = sort, section = window.location.hash.substring(2)) => {
         setLoading(true);
-        // console.log(page);
-        // console.log(sortBy);
-        // console.log(section);
+
+        console.log(window.location.hash.substring(2));
+
         try {
-            const response = await getPosts(page, sortBy, section);
+            const response = await getPosts(page, sortBy, section.toLowerCase());
             setData(response.data);
         } catch (err) {
             console.error(err);
@@ -126,11 +92,10 @@ const App = () => {
 
 
     return (
-        <BrowserRouter>
+        <HashRouter>
             <div className="flex flex-col h-screen">
                 <Navbar loggedIn={loggedIn}
                         logout={logout}
-                        sections={sections}
                         sort={sort}
                         setSort={setSort}
                         loadPosts={loadPosts}
@@ -141,7 +106,6 @@ const App = () => {
 
 
                 <PostModal isOpen={isPostModalOpen}
-                           sections={sections}
                            loadPosts={() => loadPosts(0)}
                            closeModal={() => setIsPostModalOpen(false)}/>
                 <LoginModal isOpen={isLoginModalOpen}
@@ -150,7 +114,6 @@ const App = () => {
                 <RegisterModal e isOpen={isRegisterModalOpen}
                                handleRegister={handleRegister}
                                closeModal={() => setIsRegisterModalOpen(false)}/>
-
 
                 <Toaster
                     toastOptions={{
@@ -182,7 +145,7 @@ const App = () => {
                     )}
                 </Switch>
             </div>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 

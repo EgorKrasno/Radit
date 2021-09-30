@@ -1,4 +1,6 @@
 /* ./src/index.css */
+@import url("https://use.typekit.net/izf7yln.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

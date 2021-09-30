@@ -89,11 +89,15 @@ public class PostService {
 
     //Convert to Mapper method
     public PostResponseDto getAllPosts(Authentication auth, int pageNo, int pageSize, String sortBy, String section) throws RaditException {
-
-        Section foundSection = sectionRepository.findByName(section).orElseThrow(() -> new RaditException("Section not found"));
-
+        Page<Post> pageResult;
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
-        Page<Post> pageResult = postRepository.findAllBySection(foundSection, paging);
+
+        if (section.equals("all")) {
+            pageResult = postRepository.findAll(paging);
+        } else {
+            Section foundSection = sectionRepository.findByName(section).orElseThrow(() -> new RaditException("Section not found"));
+            pageResult = postRepository.findAllBySection(foundSection, paging);
+        }
 
         if (!pageResult.hasContent()) {
             PostResponseDto response = new PostResponseDto();
