@@ -25,11 +25,11 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
         e.preventDefault();
         try {
             if (title.trim() === '') {
-                setError("At least put some effort into your 💩 post");
+                setError("Not 🌶️ enough");
                 return;
             }
             if (content.trim() === "" && image.raw === "") {
-                setError("At least put some effort into your 💩 post")
+                setError("Not 🌶️ enough")
                 return;
             }
 
@@ -40,7 +40,7 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
             formData.append("file", image.raw);
             formData.append("section", section.name.toLowerCase())
             await createPost(formData);
-            toast.success("Now that is spicy, Very Nice!");
+            toast.success("Now that's a spicy 👍");
             close();
             loadPosts();
         } catch (e) {
@@ -107,7 +107,7 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
                                 as="h3"
                                 className="text-lg font-bold font-bold text-3xl font-custom text-center text-gray-900 pb-3"
                             >
-                                Create a spicy post
+                                Create a spicy
                             </Dialog.Title>
                             {error && <p className="text-left font-semibold text-red-500">{error}</p>}
                             <form className="mt-2 space-y-4 w-full" onSubmit={submitHandler}>
@@ -204,7 +204,7 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
                                 </div>
                                 <button
                                     disabled={loading}
-                                    className={`${loading && 'opacity-75 cursor-not-allowed'} w-full cursor-pointer rounded-lg text-white focus:outline-none font-bold font-custom text-2xl p-2 bg-gradient-to-r from-red-600 to-yellow-500`}>
+                                    className={`${loading && 'opacity-75 cursor-not-allowed'} shadow-md w-full cursor-pointer rounded-lg text-white focus:outline-none font-bold font-custom text-2xl p-2 bg-gradient-to-r from-red-600 to-yellow-500`}>
                                     {loading ? "Shitposting 💩" : "Post 🚀"}
                                 </button>
                             </form>

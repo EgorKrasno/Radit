@@ -28,12 +28,12 @@ const Board = ({data, loggedIn, setIsLoginModalOpen, loadPosts, page, setPage}) 
             {renderPosts()}
             <div className="mt-5 flex justify-between w-full">
                 <button
-                    className={`${page <= 0 && "invisible"} cursor-pointer rounded-full text-white font-semibold py-1.5 px-5 bg-gradient-to-r from-red-600 to-yellow-500`}
+                    className={`${page <= 0 && "invisible"} shadow cursor-pointer rounded-full text-white font-semibold py-1.5 px-5 bg-gradient-to-r from-red-600 to-yellow-500`}
                     onClick={() => handlePageChange(-1)}
                 >Previous
                 </button>
                 <button
-                    className={`${!data.hasNext && "invisible"} cursor-pointer rounded-full text-white font-semibold py-1.5 px-5 bg-gradient-to-r from-red-600 to-yellow-500`}
+                    className={`${!data.hasNext && "invisible"} shadow cursor-pointer rounded-full text-white font-semibold py-1.5 px-5 bg-gradient-to-r from-red-600 to-yellow-500`}
                     onClick={() => handlePageChange(1)}
                 >Next
                 </button>

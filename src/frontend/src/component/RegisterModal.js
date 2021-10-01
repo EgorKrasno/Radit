@@ -122,7 +122,7 @@ const RegisterModal = ({closeModal, isOpen, handleRegister}) => {
                                 <p className="mt-1 text-left text-normal text-red-500 ">{errors.verifyPassword.message}</p>}
 
                                 <button
-                                    className="mt-6 w-full font-custom cursor-pointer rounded-lg text-white focus:outline-none text-xl font-bold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
+                                    className="shadow-md mt-6 w-full font-custom cursor-pointer rounded-lg text-white focus:outline-none text-xl font-bold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
                                     Create Account
                                 </button>
                             </form>

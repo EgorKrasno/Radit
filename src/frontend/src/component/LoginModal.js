@@ -78,7 +78,7 @@ const LoginModal = ({closeModal, isOpen, handleLogin}) => {
                                        onChange={e => setPassword(e.target.value)}
                                 />
                                 <button
-                                    className="mt-6 w-full font-custom cursor-pointer rounded-lg text-white focus:outline-none text-xl font-bold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
+                                    className="shadow-md mt-6 w-full font-custom cursor-pointer rounded-lg text-white focus:outline-none text-xl font-bold p-2 bg-gradient-to-r from-red-600 to-yellow-500">
                                     Login
                                 </button>
                             </form>

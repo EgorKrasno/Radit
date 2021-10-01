@@ -1,6 +1,5 @@
 package com.egor.radit.controller;
 
-import com.egor.radit.dto.PostResponse;
 import com.egor.radit.dto.PostResponseDto;
 import com.egor.radit.exception.RaditException;
 import com.egor.radit.service.PostService;
@@ -13,12 +12,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts/")
@@ -31,9 +26,9 @@ public class PostController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<Void> createPost(Authentication auth,
-                                           @RequestParam("title") @NotBlank @Size(max = 50) String title,
+                                           @RequestParam("title") @NotBlank @Size(max = 75) String title,
                                            @RequestParam(value = "section", defaultValue = "random") @NotBlank String section,
-                                           @RequestParam(value = "content", required = false) @Size(max = 500) String content,
+                                           @RequestParam(value = "content", required = false) @Size(max = 1500) String content,
                                            @RequestParam(value = "file", required = false) MultipartFile file
     ) throws RaditException {
         postService.save(auth, title, content, section, file);
@@ -44,7 +39,7 @@ public class PostController {
     @GetMapping("/all")
     public ResponseEntity<PostResponseDto> getAllPosts(Authentication auth,
                                                        @RequestParam(defaultValue = "0") int pageNo,
-                                                       @RequestParam(defaultValue = "7") int pageSize,
+                                                       @RequestParam(defaultValue = "5") int pageSize,
                                                        @RequestParam(defaultValue = "voteCount") String sortBy,
                                                        @RequestParam(defaultValue = "all") String section
     ) throws RaditException {

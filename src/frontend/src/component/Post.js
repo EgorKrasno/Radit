@@ -2,20 +2,22 @@ import {
     AiOutlineComment,
     FaArrowDown,
     FaArrowUp,
-    FaCrown,
-    GiCrownedSkull,
+    FaCrown, GiAmmoniteFossil,
+    GiCrownedSkull, GiFossil,
     GiLaurelCrown,
-    GiQueenCrown
+    GiQueenCrown, GiTechnoHeart
 } from "react-icons/all";
 import {vote} from "../service/service";
 import {useRef, useState} from "react";
 import Comments from "./Comments";
+import {postModalSections} from "../data/Data";
 
 const Post = ({post, openLoginModal, loggedIn}) => {
     const [voteDirection, setVoteDirection] = useState(post.userVote);
     const [voteCount, setVoteCount] = useState(post.voteCount);
     const [showComments, setShowComments] = useState(false);
     const [localCommentAdd, setLocalCommentAdd] = useState(0);
+    const [section, setSection] = useState(postModalSections.find(s => s.name.toLowerCase() === post.section));
 
 
     const handleVote = async (direction) => {
@@ -50,16 +52,22 @@ const Post = ({post, openLoginModal, loggedIn}) => {
                     </div>
                 </div>
                 <div className="flex-1">
-                    <h1 className="text-center text-xl font-semibold">{post.title[0].toUpperCase() + post.title.substring(1)}</h1>
+                    <div className="flex items-center mb-1.5 space-x-0.5">
+                        {/*<GiFossil size={20}/>*/}
+                        {section.icon(true)}
+                        <p className="text-sm pl-0.5 text-gray-900">{section.name}</p>
+                    </div>
+                    <h1 className="text-left text-gray-900 text-xl mb-1.5 font-bold">{post.title[0].toUpperCase() + post.title.substring(1)}</h1>
                     {post.imageUrl &&
                     <img className="max-h-72 max-w-72 mx-auto mb-2 mt-2" src={post.imageUrl} alt="image"/>}
-                    {post.content && <p className="">{post.content}</p>}
+                    {post.content && <p className="text-gray-900">{post.content}</p>}
                     <div className="flex justify-between items-center pt-2">
                         <button
                             onClick={() => setShowComments(!showComments)}
                             className="flex items-center text-gray-600 space-x-1 cursor-pointer hover:text-red-500">
                             <AiOutlineComment size={22}/>
-                            <p className="text-sm">{post.commentCount + localCommentAdd} <span className="hidden sm:inline-block">Comments</span></p>
+                            <p className="text-sm">{post.commentCount + localCommentAdd} <span
+                                className="hidden sm:inline-block">Comments</span></p>
                         </button>
                         <p className="flex items-center text-sm text-gray-500 capitalize">Posted by {post.userName}
                             <GiQueenCrown

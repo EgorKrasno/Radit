@@ -1,9 +1,6 @@
 import {
-    AiFillHome,
-    FiChevronDown, GiChiliPepper, GiCoffeeBeans, GiDespair, GiFossil, GiNewShoot,
-    GiPerspectiveDiceSixFacesRandom,
-    GiTechnoHeart, GoFlame,
-    RiHomeHeartFill
+    FiChevronDown, GiChiliPepper, GiNewShoot,
+    GoFlame,
 } from "react-icons/all";
 import SettingsMenu from "./SettingsMenu";
 import {Popover, RadioGroup, Transition} from '@headlessui/react'
@@ -40,10 +37,12 @@ const Navbar = ({
     return (
         <div className="flex w-screen bg-white shadow-sm items-center justify-between h-14 px-8 z-20">
             <div className="flex">
-                <div className="cursor-pointer flex items-center text-3xl text-red-500 space-x-1">
-                    <GiChiliPepper size={34} className={"text-red-500"}/>
-                    <p className="hidden sm:inline-block font-custom">Spicy</p>
-                </div>
+                <a
+                    href='/#'
+                    className="cursor-pointer flex items-center text-3xl text-red-500 space-x-1">
+                    <GiChiliPepper size={34} className="text-red-500"/>
+                    <p className="hidden sm:inline-block font-custom ">Spicy</p>
+                </a>
 
 
                 <div className="w-full ml-12 border border-gray-200 rounded-lg">
@@ -116,7 +115,7 @@ const Navbar = ({
                         <RadioGroup.Option value="voteCount">
                             {({checked}) => (
                                 <div
-                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} flex items-center cursor-pointer rounded-full text-white font-semibold px-5 h-8`}>
+                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} shadow flex items-center cursor-pointer rounded-full text-white font-bold px-5 h-8`}>
                                     <GoFlame className="mr-1" size={20}/>
                                     <p className="font-custom text-lg">Hot</p>
                                 </div>
@@ -125,7 +124,7 @@ const Navbar = ({
                         <RadioGroup.Option value="createdDate">
                             {({checked}) => (
                                 <div
-                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} flex items-center cursor-pointer rounded-full text-white font-semibold px-5 h-8`}>
+                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} shadow flex items-center cursor-pointer rounded-full text-white font-semibold px-5 h-8`}>
                                     <GiNewShoot className="mr-1"/>
                                     <p className='font-bold text-lg'>New</p>
                                 </div>
@@ -140,7 +139,7 @@ const Navbar = ({
                 {loggedIn ?
                     <div className="flex space-x-4 items-center">
                         <button onClick={() => setIsPostModalOpen(true)}
-                                className="cursor-pointer rounded-lg text-white font-semibold py-1.5 px-4 bg-gradient-to-r from-red-600 to-yellow-500">
+                                className="shadow text-lg cursor-pointer rounded-full text-white font-bold py-1 px-4 bg-gradient-to-r from-red-600 to-yellow-500">
                             Post 🚀
                         </button>
                         <SettingsMenu handleLogout={logout}/>

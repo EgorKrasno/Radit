@@ -92,11 +92,13 @@ public class PostService {
         Page<Post> pageResult;
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
 
+
+        Optional<Section> foundSection = sectionRepository.findByName(section);
+
         if (section.equals("all")) {
             pageResult = postRepository.findAll(paging);
         } else {
-            Section foundSection = sectionRepository.findByName(section).orElseThrow(() -> new RaditException("Section not found"));
-            pageResult = postRepository.findAllBySection(foundSection, paging);
+            pageResult = postRepository.findAllBySection(foundSection.get(), paging);
         }
 
         if (!pageResult.hasContent()) {
@@ -121,6 +123,7 @@ public class PostService {
             postResponse.setUserName(post.getUser().getUsername());
             postResponse.setVoteCount(post.getVoteCount());
             postResponse.setCommentCount(post.getCommentCount());
+            postResponse.setSection(post.getSection().getName());
 
             if (post.getImageFileName() != null) {
                 postResponse.setImageUrl("https://s3.us-east-2.amazonaws.com/" + post.getImagePath() + "/" + post.getImageFileName());
