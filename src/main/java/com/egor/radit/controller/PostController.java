@@ -1,7 +1,6 @@
 package com.egor.radit.controller;
 
-import com.amazonaws.Response;
-import com.egor.radit.dto.PostResponseDto;
+import com.egor.radit.dto.PostResponseWrapper;
 import com.egor.radit.exception.RaditException;
 import com.egor.radit.service.PostService;
 import lombok.AllArgsConstructor;
@@ -40,11 +39,11 @@ public class PostController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<PostResponseDto> getAllPosts(Authentication auth,
-                                                       @RequestParam(defaultValue = "0") int pageNo,
-                                                       @RequestParam(defaultValue = "5") int pageSize,
-                                                       @RequestParam(defaultValue = "voteCount") String sortBy,
-                                                       @RequestParam(defaultValue = "all") String section
+    public ResponseEntity<PostResponseWrapper> getAllPosts(Authentication auth,
+                                                           @RequestParam(defaultValue = "0") int pageNo,
+                                                           @RequestParam(defaultValue = "5") int pageSize,
+                                                           @RequestParam(defaultValue = "voteCount") String sortBy,
+                                                           @RequestParam(defaultValue = "all") String section
     ) throws RaditException {
         return new ResponseEntity<>(postService.getAllPosts(auth, pageNo, pageSize, sortBy, section), HttpStatus.OK);
     }

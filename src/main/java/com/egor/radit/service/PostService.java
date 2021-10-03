@@ -1,8 +1,9 @@
 package com.egor.radit.service;
 
-import com.egor.radit.dto.PostResponse;
 import com.egor.radit.dto.PostResponseDto;
+import com.egor.radit.dto.PostResponseWrapper;
 import com.egor.radit.exception.RaditException;
+import com.egor.radit.mapper.PostMapper;
 import com.egor.radit.model.Post;
 import com.egor.radit.model.Section;
 import com.egor.radit.model.User;
@@ -24,7 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.apache.http.entity.ContentType.*;
 
 @Service
@@ -38,6 +41,7 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final SectionRepository sectionRepository;
     private final FileStore fileStore;
+    private final PostMapper postMapper;
 
     @Value("${BUCKET}")
     private String bucket;
@@ -56,7 +60,7 @@ public class PostService {
         newPost.setVoteCount(0);
         newPost.setCommentCount(0);
 
-        user.setPostCount(user.getPostCount()+1);
+        user.setPostCount(user.getPostCount() + 1);
         userRepository.save(user);
 
         if (file != null) {
@@ -70,7 +74,7 @@ public class PostService {
     }
 
     //Convert to Mapper method
-    public PostResponseDto getAllPosts(Authentication auth, int pageNo, int pageSize, String sortBy, String section) throws RaditException {
+    public PostResponseWrapper getAllPosts(Authentication auth, int pageNo, int pageSize, String sortBy, String section) throws RaditException {
         Page<Post> pageResult;
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
 
@@ -83,58 +87,43 @@ public class PostService {
             pageResult = postRepository.findAllBySection(foundSection.get(), paging);
         }
 
+        // If the current page is empty
+        // return empty list with false
         if (!pageResult.hasContent()) {
-            PostResponseDto response = new PostResponseDto();
+            PostResponseWrapper response = new PostResponseWrapper();
             response.setPosts(new ArrayList<>());
             response.setHasNext(pageResult.hasNext());
             return response;
         }
 
-        List<PostResponse> postList = new ArrayList<>();
-        for (Post post : pageResult.getContent()) {
-            PostResponse postResponse = new PostResponse();
-            if (auth != null) {
-                Optional<User> user = userRepository.findByUsername(auth.getName());
-                Optional<Vote> vote = voteRepository.findByPostAndUser(post, user.get());
-                postResponse.setUserVote(vote.map(Vote::getDirection).orElse(0));
-            }
+        //Map all responses
+        List<PostResponseDto> postList = pageResult.getContent().stream()
+                .map(x -> postMapper.mapToDto(x, auth))
+                .collect(toList());
 
-            postResponse.setId(post.getPostId());
-            postResponse.setTitle(post.getTitle());
-            postResponse.setContent(post.getContent());
-            postResponse.setUserName(post.getUser().getUsername());
-            postResponse.setVoteCount(post.getVoteCount());
-            postResponse.setCommentCount(post.getCommentCount());
-            postResponse.setDuration(TimeAgo.using(post.getCreatedDate().toEpochMilli()));
-            postResponse.setSection(post.getSection().getName());
-
-            if (post.getImageFileName() != null) {
-                postResponse.setImageUrl("https://s3.us-east-2.amazonaws.com/" + post.getImagePath() + "/" + post.getImageFileName());
-            }
-            postList.add(postResponse);
-        }
-
-        PostResponseDto response = new PostResponseDto();
+        PostResponseWrapper response = new PostResponseWrapper();
         response.setPosts(postList);
         response.setHasNext(pageResult.hasNext());
-
         return response;
     }
 
 
     public void deletePost(Authentication auth, long postId) throws RaditException {
-        User user = userRepository.findByUsername(auth.getName()).orElseThrow(()-> new RaditException("User not found"));
-        Post post = postRepository.findById(postId).orElseThrow(()-> new RaditException("Post not found"));
-        if(user != post.getUser()){
+        User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new RaditException("User not found"));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RaditException("Post not found"));
+        if (user != post.getUser()) {
             throw new RaditException("You can only delete your own posts");
         }
+
         voteRepository.deleteByPost(post);
         commentRepository.deleteByPost(post);
-        fileStore.delete(post.getImagePath(), post.getImageFileName());
+        if (post.getImagePath() != null) {
+            fileStore.delete(post.getImagePath(), post.getImageFileName());
+        }
         postRepository.delete(post);
     }
 
-    private void uploadFile(MultipartFile file, String path, String fileName){
+    private void uploadFile(MultipartFile file, String path, String fileName) {
         if (!Arrays.asList(IMAGE_PNG.getMimeType(),
                 IMAGE_BMP.getMimeType(),
                 IMAGE_GIF.getMimeType(),
