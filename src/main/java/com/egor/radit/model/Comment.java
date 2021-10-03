@@ -22,6 +22,7 @@ public class Comment {
     private Long id;
 
     @NotEmpty
+    @Lob
     private String text;
 
     @ManyToOne(fetch = LAZY)

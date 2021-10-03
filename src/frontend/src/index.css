@@ -26,3 +26,7 @@
 .comments::-webkit-scrollbar-thumb:hover {
     background: #EF8019;
 }
+
+.react-icons {
+    vertical-align: middle;
+}

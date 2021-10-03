@@ -135,7 +135,7 @@ const Navbar = ({
                     <div className="flex  items-center">
                         <button onClick={() => setIsPostModalOpen(true)}
                                 className="sm:mx-5 mx-2 shadow text-lg cursor-pointer rounded-full text-white font-bold py-1 px-4 bg-gradient-to-r from-red-600 to-yellow-500">
-                            Post <span className="hidden sm:inline-block">🚀</span>
+                            Post <span className="hidden sm:inline-block">🌶️</span>
                         </button>
                         <SettingsMenu handleLogout={logout}/>
                     </div>

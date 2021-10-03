@@ -7,7 +7,7 @@ module.exports = {
         },
         extend: {
             screens: {
-                'tablet': '1100px',
+                'tablet': '1160px',
             },
             fontFamily: {
                 sans: ['Soleil', 'sans-serif']

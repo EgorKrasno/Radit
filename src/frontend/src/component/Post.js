@@ -1,7 +1,7 @@
 import {
     AiOutlineComment,
     FaArrowDown,
-    FaArrowUp,
+    FaArrowUp, GiCheckedShield,
     GiQueenCrown
 } from "react-icons/all";
 import {deletePost, vote} from "../service/service";
@@ -46,11 +46,11 @@ const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
     const openDeleteModal = () => setIsDeleteModalOpen(true);
 
     const handleDelete = async () => {
-        try{
+        try {
             await deletePost(post.id);
             toast.success("Spicy deleted");
             refresh();
-        } catch (e){
+        } catch (e) {
             toast.error("Something went wrong");
             console.log(e);
         }
@@ -58,9 +58,9 @@ const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
 
     return (
         <>
-            <div className="flex bg-white sm:rounded-xl shadow-md px-3 sm:px-6 py-4 flex flex-col w-full">
+            <div className="flex bg-white sm:rounded-xl shadow-md px-2 sm:px-6 py-3 sm:py-4 flex flex-col w-full">
                 <div className="flex flex-1">
-                    <div className="flex flex-col justify-center items-center pr-3 sm:pr-6 space-y-1.5">
+                    <div className="flex flex-col justify-center items-center pr-2 sm:pr-6 space-y-1.5">
                         <div className={`${upvoteEffect && "animate-upvote"}`}
                              onAnimationEnd={() => setUpvoteEffect(false)}
                              onClick={() => handleVote(1)}>
@@ -78,19 +78,26 @@ const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
                         </div>
                     </div>
                     <div className="flex-1">
-                        <div className="flex justify-between">
+                        <div className="flex justify-between max-h-96">
                             <Link to={`/${section.name}`}
-                                  className="text-sm pl-0.5 text-gray-900 hover:underline inline-flex mb-3 space-x-1">
+                                  className="text-sm pl-0.5 text-gray-900 hover:underline inline-flex mb-1 sm:mb-3 space-x-1">
                                 {section.icon(true)}
                                 <span>{section.name}</span>
                             </Link>
                             {user.username === post.userName && <PostMenu handleDelete={openDeleteModal}/>}
                         </div>
-                        <h1 className="text-left text-gray-900 text-xl mb-3 font-bold">{post.title[0].toUpperCase() + post.title.substring(1)}</h1>
+                        <h1 className="text-left text-gray-900 text-xl mb-2 sm:mb-3 font-bold">{post.title[0].toUpperCase() + post.title.substring(1)}</h1>
                         {post.imageUrl &&
-                        <img className="max-h-72 max-w-72 mx-auto mb-2 mt-3" src={post.imageUrl} alt=""/>}
+                        <div className="flex justify-center mb-2 mt-3">
+                            {window.screen.width > 640 ?
+                                <a href={post.imageUrl} target="_blank" rel="noopener noreferrer">
+                                    <img src={post.imageUrl} alt=""/>
+                                </a> :
+                                <img src={post.imageUrl} alt=""/>
+                            }
+                        </div>}
                         {post.content && <p className="text-gray-900">{post.content}</p>}
-                        <div className="flex justify-between items-center pt-4">
+                        <div className="flex justify-between items-center pt-3 sm:pt-4">
                             <button
                                 onClick={() => setShowComments(!showComments)}
                                 className="flex items-center text-gray-600 space-x-1 cursor-pointer hover:text-red-500">
@@ -103,9 +110,9 @@ const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
                                 <span className="hidden sm:inline-block">Posted by&nbsp;</span>
                                 <Link className="capitalize hover:underline"
                                       to={`/user/${post.userName}`}>{post.userName === user.username ? "You" : post.userName}</Link>
-                                <GiQueenCrown
+                                <GiCheckedShield
                                     hidden={post.userName !== "admin"}
-                                    className="ml-0.5"/>
+                                    className="ml-0.5 mt-0.5 text-red-500"/>
                                 <span className="ml-1 lowercase">{post.duration}</span>
                             </p>
                         </div>

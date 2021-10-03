@@ -9,7 +9,6 @@ const getToken = () => {
 }
 
 export const getPosts = async (pageNo, sortBy, section) => {
-    console.log("getPosts from Service");
     return await axios.get(`api/posts/all`, {headers: {Authorization: `Bearer ${getToken()}`}, params:{pageNo, sortBy, section}});
 }
 

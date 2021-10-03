@@ -78,7 +78,8 @@ public class PostService {
         Page<Post> pageResult;
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
 
-
+        //Check if user is signed in or not, there is probably a better way to do this
+        User user = userRepository.findByUsername(auth != null ? auth.getName() : null).orElse(null);
         Optional<Section> foundSection = sectionRepository.findByName(section);
 
         if (section.equals("all")) {
@@ -98,7 +99,7 @@ public class PostService {
 
         //Map all responses
         List<PostResponseDto> postList = pageResult.getContent().stream()
-                .map(x -> postMapper.mapToDto(x, auth))
+                .map(x -> postMapper.mapToDto(x, user))
                 .collect(toList());
 
         PostResponseWrapper response = new PostResponseWrapper();
@@ -131,12 +132,8 @@ public class PostService {
             throw new IllegalStateException("File uploaded is not an image");
         }
 
-        //get file metadata
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("Content-Type", file.getContentType());
-
         try {
-            fileStore.upload(path, fileName, Optional.of(metadata), file.getInputStream());
+            fileStore.upload(path, fileName, file.getContentType(), file.getInputStream());
         } catch (IOException e) {
             throw new IllegalStateException("Failed to upload file", e);
         }

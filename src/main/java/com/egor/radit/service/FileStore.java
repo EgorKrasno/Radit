@@ -22,14 +22,10 @@ public class FileStore {
 
     public void upload(String path,
                        String fileName,
-                       Optional<Map<String, String>> optionalMetaData,
+                       String contentType,
                        InputStream inputStream) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
-        optionalMetaData.ifPresent(map -> {
-            if (!map.isEmpty()) {
-                map.forEach(objectMetadata::addUserMetadata);
-            }
-        });
+        objectMetadata.setContentType(contentType);
 
         try {
             amazonS3.putObject(path, fileName, inputStream, objectMetadata);

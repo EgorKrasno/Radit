@@ -91,7 +91,7 @@ const Board = ({loggedIn, setIsLoginModalOpen, page, setPage, sort, section, ref
     }
 
     return (
-        <div className="flex flex-col justify-center items-center space-y-4 sm:space-y-6">
+        <div className="flex flex-col justify-center items-center space-y-2 sm:space-y-6 pb-2 sm:pb-6">
             {renderPosts()}
         </div>
     );

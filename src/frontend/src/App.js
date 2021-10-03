@@ -9,7 +9,6 @@ import {HashRouter, Route, Switch} from "react-router-dom";
 import Home from "./component/Home";
 import {sections} from "./data/Data";
 import UserPage from "./component/UserPage";
-import {data} from "autoprefixer";
 
 const App = () => {
     const [loggedIn, setLoggedIn] = useState(localStorage.getItem("token") !== null);
