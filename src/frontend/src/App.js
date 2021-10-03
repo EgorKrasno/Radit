@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {getPosts, health, login, register} from "./service/service";
+import {health, login, register} from "./service/service";
 import PostModal from "./component/PostModal";
 import LoginModal from "./component/LoginModal";
 import RegisterModal from "./component/RegisterModal";
@@ -8,30 +8,22 @@ import {Toaster} from "react-hot-toast";
 import {HashRouter, Route, Switch} from "react-router-dom";
 import Home from "./component/Home";
 import {sections} from "./data/Data";
+import UserPage from "./component/UserPage";
+import {data} from "autoprefixer";
 
 const App = () => {
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(localStorage.getItem("token") !== null);
+    const [userData, setUserData] = useState({username: "", roles: []});
     const [isPostModalOpen, setIsPostModalOpen] = useState(false)
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false)
-    const [loading, setLoading] = useState(true);
-    const [data, setData] = useState({});
     const [page, setPage] = useState(0);
     const [sort, setSort] = useState("voteCount");
+    const [refresh, setRefresh] = useState(false);
+    const [section, setSection] = useState(sections.filter(s => s.name === window.location.hash.substring(2))[0] || sections[0]);
+
 
     useEffect(() => {
-        if (localStorage.getItem("token") !== null) {
-            const storage = JSON.parse(localStorage.getItem("token"));
-            setLoggedIn(true);
-            fetchHealth();
-        } else {
-            setLoggedIn(false);
-        }
-
-        async function fetchData() {
-            await loadPosts(0);
-        }
-
         async function fetchHealth() {
             try {
                 await health();
@@ -41,28 +33,24 @@ const App = () => {
             }
         }
 
-        fetchData();
-    }, []);
-
-
-    const loadPosts = async (page = 0, sortBy = sort, section = window.location.hash.substring(2)) => {
-        setLoading(true);
-
-        console.log(window.location.hash.substring(2));
-
-        try {
-            const response = await getPosts(page, sortBy, section.toLowerCase());
-            setData(response.data);
-        } catch (err) {
-            console.error(err);
+        if(localStorage.getItem("userData") !== null){
+            const data = localStorage.getItem("userData");
+            const initialValue = JSON.parse(data);
+            setUserData(initialValue);
+        } else {
+           localStorage.clear();
+            setUserData({username: "", roles: []});
+           setLoggedIn(false);
         }
-        setLoading(false);
-    }
+
+        fetchHealth();
+    }, []);
 
     const handleLogin = async (user) => {
         try {
             const response = await login(user);
             await loginActions(response);
+
         } catch (e) {
             return Promise.reject(e.response.data);
         }
@@ -79,16 +67,29 @@ const App = () => {
 
     const loginActions = async (response) => {
         const token = response.headers["jwt-token"];
+        const data = response.data;
         localStorage.setItem("token", JSON.stringify(token));
+        localStorage.setItem("userData", JSON.stringify(data))
+        setUserData(data);
         setLoggedIn(true);
-        await loadPosts(0);
     }
 
     const logout = async () => {
         localStorage.clear();
         setLoggedIn(false);
-        await loadPosts(0);
+        setUserData({username: "", roles: []});
     }
+
+    //cause a refresh on of the posts after post is created
+    const postCreated = () => {
+        if (sort === 'createdDate' && page === 0) {
+            //force a refresh of board if we are on the first page new
+            setRefresh(!refresh);
+        } else {
+            setSort('createdDate')
+            setPage(0);
+        }
+    };
 
 
     return (
@@ -98,20 +99,22 @@ const App = () => {
                         logout={logout}
                         sort={sort}
                         setSort={setSort}
-                        loadPosts={loadPosts}
                         setPage={setPage}
+                        section={section}
+                        setSection={setSection}
                         setIsPostModalOpen={() => setIsPostModalOpen(true)}
                         setIsRegisterModalOpen={() => setIsRegisterModalOpen(true)}
                         setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>
 
 
                 <PostModal isOpen={isPostModalOpen}
-                           loadPosts={() => loadPosts(0)}
+                           section={section}
+                           postCreated={postCreated}
                            closeModal={() => setIsPostModalOpen(false)}/>
                 <LoginModal isOpen={isLoginModalOpen}
                             handleLogin={handleLogin}
                             closeModal={() => setIsLoginModalOpen(false)}/>
-                <RegisterModal e isOpen={isRegisterModalOpen}
+                <RegisterModal isOpen={isRegisterModalOpen}
                                handleRegister={handleRegister}
                                closeModal={() => setIsRegisterModalOpen(false)}/>
 
@@ -130,17 +133,18 @@ const App = () => {
                     }}
                 />
                 <Switch>
+                    <Route exact path="/user/:username" component={UserPage}/>
                     {sections.map(s =>
-                        <Route path={s.path} key={s.name}>
+                        <Route exact path={s.path} key={s.name}>
                             <Home sort={sort}
-                                  data={data}
+                                  user={userData}
+                                  refresh={refresh}
                                   setSort={setSort}
-                                  loadPosts={loadPosts}
                                   page={page}
+                                  section={section}
                                   loggedIn={loggedIn}
                                   setPage={setPage}
-                                  setIsLoginModalOpen={setIsLoginModalOpen}
-                                  loading={loading}/>
+                                  setIsLoginModalOpen={setIsLoginModalOpen}/>
                         </Route>
                     )}
                 </Switch>

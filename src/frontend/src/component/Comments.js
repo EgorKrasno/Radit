@@ -1,8 +1,7 @@
-import {useParams} from "react-router-dom";
 import Comment from "./Comment";
 import {useEffect, useState} from "react";
 import {createComment, getComments} from "../service/service";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const Comments = ({post, addLocalComment, loggedIn, openLoginModal}) => {
     const [comment, setComment] = useState("");
@@ -32,12 +31,12 @@ const Comments = ({post, addLocalComment, loggedIn, openLoginModal}) => {
         }
 
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const loadComments = async () => {
         const response = await getComments(post.id);
         setComments(response.data);
-        console.log(response.data);
     }
 
     return (

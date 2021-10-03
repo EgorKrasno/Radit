@@ -7,11 +7,8 @@ import com.egor.radit.model.Post;
 import com.egor.radit.model.Section;
 import com.egor.radit.model.User;
 import com.egor.radit.model.Vote;
-import com.egor.radit.repository.PostRepository;
-import com.egor.radit.repository.SectionRepository;
-import com.egor.radit.repository.UserRepository;
-import com.egor.radit.repository.VoteRepository;
-import lombok.AllArgsConstructor;
+import com.egor.radit.repository.*;
+import com.github.marlonlom.utilities.timeago.TimeAgo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +35,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final VoteRepository voteRepository;
+    private final CommentRepository commentRepository;
     private final SectionRepository sectionRepository;
     private final FileStore fileStore;
 
@@ -47,43 +45,27 @@ public class PostService {
     public void save(Authentication auth, String title, String content, String sectionName, MultipartFile file) throws RaditException {
         Post newPost = new Post();
         User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new RaditException("User not found"));
-        newPost.setUser(user);
-
         Section section = sectionRepository.findByName(sectionName).orElseThrow(() -> new RaditException("Section not found"));
 
 
+        newPost.setUser(user);
+        newPost.setSection(section);
         newPost.setTitle(title);
         newPost.setContent(content);
         newPost.setCreatedDate(Instant.now());
-        newPost.setCreatedDate(Instant.now());
         newPost.setVoteCount(0);
         newPost.setCommentCount(0);
-        newPost.setSection(section);
+
+        user.setPostCount(user.getPostCount()+1);
+        userRepository.save(user);
 
         if (file != null) {
-            if (!Arrays.asList(IMAGE_PNG.getMimeType(),
-                    IMAGE_BMP.getMimeType(),
-                    IMAGE_GIF.getMimeType(),
-                    IMAGE_JPEG.getMimeType()).contains(file.getContentType())) {
-                throw new IllegalStateException("File uploaded is not an image");
-            }
-
-            //get file metadata
-            Map<String, String> metadata = new HashMap<>();
-            metadata.put("Content-Type", file.getContentType());
             String path = String.format("%s/%s", bucket, UUID.randomUUID());
             String fileName = String.format("%s", file.getOriginalFilename());
-
-            try {
-                fileStore.upload(path, fileName, Optional.of(metadata), file.getInputStream());
-            } catch (IOException e) {
-                throw new IllegalStateException("Failed to upload file", e);
-            }
-
+            uploadFile(file, path, fileName);
             newPost.setImagePath(path);
             newPost.setImageFileName(fileName);
         }
-
         postRepository.save(newPost);
     }
 
@@ -123,6 +105,7 @@ public class PostService {
             postResponse.setUserName(post.getUser().getUsername());
             postResponse.setVoteCount(post.getVoteCount());
             postResponse.setCommentCount(post.getCommentCount());
+            postResponse.setDuration(TimeAgo.using(post.getCreatedDate().toEpochMilli()));
             postResponse.setSection(post.getSection().getName());
 
             if (post.getImageFileName() != null) {
@@ -136,5 +119,37 @@ public class PostService {
         response.setHasNext(pageResult.hasNext());
 
         return response;
+    }
+
+
+    public void deletePost(Authentication auth, long postId) throws RaditException {
+        User user = userRepository.findByUsername(auth.getName()).orElseThrow(()-> new RaditException("User not found"));
+        Post post = postRepository.findById(postId).orElseThrow(()-> new RaditException("Post not found"));
+        if(user != post.getUser()){
+            throw new RaditException("You can only delete your own posts");
+        }
+        voteRepository.deleteByPost(post);
+        commentRepository.deleteByPost(post);
+        fileStore.delete(post.getImagePath(), post.getImageFileName());
+        postRepository.delete(post);
+    }
+
+    private void uploadFile(MultipartFile file, String path, String fileName){
+        if (!Arrays.asList(IMAGE_PNG.getMimeType(),
+                IMAGE_BMP.getMimeType(),
+                IMAGE_GIF.getMimeType(),
+                IMAGE_JPEG.getMimeType()).contains(file.getContentType())) {
+            throw new IllegalStateException("File uploaded is not an image");
+        }
+
+        //get file metadata
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("Content-Type", file.getContentType());
+
+        try {
+            fileStore.upload(path, fileName, Optional.of(metadata), file.getInputStream());
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to upload file", e);
+        }
     }
 }

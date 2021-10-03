@@ -1,5 +1,6 @@
 package com.egor.radit.controller;
 
+import com.amazonaws.Response;
 import com.egor.radit.dto.PostResponseDto;
 import com.egor.radit.exception.RaditException;
 import com.egor.radit.service.PostService;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import javax.validation.constraints.Size;
 public class PostController {
     private final PostService postService;
 
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping(path = "/save",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
@@ -45,4 +48,13 @@ public class PostController {
     ) throws RaditException {
         return new ResponseEntity<>(postService.getAllPosts(auth, pageNo, pageSize, sortBy, section), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{postId}")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @ResponseStatus(HttpStatus.OK)
+    public void deletePost(Authentication auth, @PathVariable long postId) throws RaditException {
+        postService.deletePost(auth, postId);
+    }
+
+
 }

@@ -17,8 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Locale;
-
 @Service
 @Transactional
 @Slf4j
@@ -87,6 +85,11 @@ public class MyUserDetailsService implements UserDetailsService {
 
     public boolean health(Authentication auth) {
         return userRepository.existsByUsername(auth.getName());
+    }
+
+
+    public void getUserData(Authentication auth) throws RaditException {
+
     }
 
 //    public User getUser(String username) {

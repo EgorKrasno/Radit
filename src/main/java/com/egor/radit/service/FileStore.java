@@ -2,6 +2,7 @@ package com.egor.radit.service;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
@@ -35,5 +36,9 @@ public class FileStore {
         } catch (AmazonServiceException e) {
             throw new IllegalStateException("Failed to upload the file", e);
         }
+    }
+
+    public void delete(String bucket, String path) {
+        amazonS3.deleteObject(bucket, path);
     }
 }

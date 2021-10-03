@@ -3,6 +3,7 @@ package com.egor.radit.controller;
 
 import com.egor.radit.constant.SecurityConstant;
 import com.egor.radit.dto.RoleToUserDto;
+import com.egor.radit.dto.UserResponse;
 import com.egor.radit.exception.RaditException;
 import com.egor.radit.model.Role;
 import com.egor.radit.model.User;
@@ -29,19 +30,28 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/user/register")
-    public ResponseEntity<User> saveUser(@RequestBody User user) throws RaditException {
+    public ResponseEntity<UserResponse> saveUser(@RequestBody User user) throws RaditException {
         User newUser = userService.register(user);
         HttpHeaders jwtHeader = getJwtHeader(new UserPrincipal(newUser));
-        return new ResponseEntity<>(newUser, jwtHeader, HttpStatus.CREATED);
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsername(newUser.getUsername());
+        userResponse.setRoleList(newUser.getRoles().stream().map(Role::getName).toList());
+        return new ResponseEntity<>(userResponse, jwtHeader, HttpStatus.CREATED);
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
+    public ResponseEntity<UserResponse> login(@RequestBody User user) {
         User loginUser = userService.login(user);
         HttpHeaders jwtHeader = getJwtHeader(new UserPrincipal(loginUser));
-        return new ResponseEntity<>(jwtHeader, OK);
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsername(loginUser.getUsername());
+        userResponse.setRoleList(loginUser.getRoles().stream().map(Role::getName).toList());
+        return new ResponseEntity<>(userResponse,jwtHeader, OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
     @PostMapping("/role/save")
     public ResponseEntity<Role> saveRole(@RequestBody Role role) {
         return new ResponseEntity<>(userService.saveRole(role), HttpStatus.CREATED);
@@ -70,6 +80,11 @@ public class UserController {
         if (userService.health(auth)) return new ResponseEntity<>(OK);
         return new ResponseEntity<>(BAD_REQUEST);
     }
+
+//    public ResponseEntity<?> userData(Authentication auth) {
+//        userService.getUserData(auth);
+//        return new ResponseEntity<>(null, OK);
+//    }
 
     private HttpHeaders getJwtHeader(UserPrincipal userPrincipal) {
         HttpHeaders headers = new HttpHeaders();

@@ -14,6 +14,7 @@ public class PostResponse {
     private String userName;
     private String imageUrl;
     private String section;
+    private String duration;
     private int voteCount;
     private int commentCount;
     private int userVote;

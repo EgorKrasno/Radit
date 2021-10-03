@@ -15,7 +15,7 @@ import java.time.Instant;
 public class CommentDto {
     private Long id;
     private Long postId;
-    private Instant createdDate;
+    private String duration;
     @NotBlank
     @Size(max = 1000)
     private String text;

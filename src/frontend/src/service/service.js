@@ -9,6 +9,7 @@ const getToken = () => {
 }
 
 export const getPosts = async (pageNo, sortBy, section) => {
+    console.log("getPosts from Service");
     return await axios.get(`api/posts/all`, {headers: {Authorization: `Bearer ${getToken()}`}, params:{pageNo, sortBy, section}});
 }
 
@@ -18,6 +19,10 @@ export const getComments = async (postId) => {
 
 export const createComment = async (comment) => {
     await axios.post('api/comments/save', comment, {headers: {Authorization: `Bearer ${getToken()}`}});
+}
+
+export const deletePost = async (postId) => {
+    return await axios.delete(`api/posts/${postId}`,{headers: {Authorization: `Bearer ${getToken()}`}});
 }
 
 export const createPost = async (formData) => {

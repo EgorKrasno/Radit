@@ -7,7 +7,7 @@ import {
 } from "react-icons/all";
 import {postModalSections} from "../data/Data";
 
-const PostModal = ({closeModal, isOpen, loadPosts}) => {
+const PostModal = ({closeModal, isOpen, section, postCreated}) => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [image, setImage] = useState({preview: "", raw: ""});
@@ -15,11 +15,11 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const [section, setSection] = useState(postModalSections[0]);
+    const [sectionSelector, setSectionSelector] = useState(postModalSections[0]);
     useEffect(() => {
-        //holy molly how the hell is this monstrosity actually working
-        if (isOpen) setSection(postModalSections.filter(s => s.name === window.location.hash.substring(2))[0] || postModalSections[0]);
-    }, [isOpen]);
+        setSectionSelector(section.name.toLowerCase() === 'all' ? postModalSections[0] : section)
+    }, [section]);
+
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -38,11 +38,11 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
             formData.append("title", title);
             formData.append("content", content);
             formData.append("file", image.raw);
-            formData.append("section", section.name.toLowerCase())
+            formData.append("section", sectionSelector.name.toLowerCase())
             await createPost(formData);
             toast.success("Now that's a spicy 👍");
+            postCreated();
             close();
-            loadPosts();
         } catch (e) {
             setError(e.response.data);
         } finally {
@@ -149,10 +149,10 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
                                                 <>
                                                     <Popover.Button
                                                         className="px-3 py-2">
-                                                        <div className="flex items-center w-56 justify-between">
+                                                        <div className="flex items-center w-12 md:w-56 justify-between">
                                                             <div className="flex items-center">
-                                                                {section.icon()}
-                                                                <p className="text-gray-900 text-sm">{section.name}</p>
+                                                                {sectionSelector.icon()}
+                                                                <p className="hidden md:inline-block text-gray-900 text-sm">{sectionSelector.name}</p>
                                                             </div>
                                                             <FiChevronUp size={18} className="text-gray-900"/>
                                                         </div>
@@ -167,22 +167,22 @@ const PostModal = ({closeModal, isOpen, loadPosts}) => {
                                                         leaveTo="opacity-0 translate-y-1"
                                                     >
                                                         <Popover.Panel
-                                                            className="absolute z-10 w-full max-w-sm mt-3 bottom-12">
+                                                            className="absolute z-10 w-48 md:w-full max-w-sm mt-3 bottom-12 transform -translate-x-1/2 md:left-1/2">
                                                             {({close}) => (
                                                                 <div
                                                                     className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                                                                    <div className="relative grid gap-8 bg-white p-7">
+                                                                    <div className="relative grid gap-6 md:gap-8 bg-white p-4 md:p-7">
                                                                         {postModalSections.map((item) => (
                                                                             <div
                                                                                 onClick={() => {
-                                                                                    setSection(item)
+                                                                                    setSectionSelector(item)
                                                                                     close();
                                                                                 }}
                                                                                 key={item.name}
                                                                                 className="cursor-pointer flex items-center py-1 px-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                                                                             >
                                                                                 <div
-                                                                                    className="flex items-center justify-center flex-shrink-0 w-10 h-10 text-white sm:h-8">
+                                                                                    className="flex items-center justify-center flex-shrink-0 w-8 h-8 text-white sm:h-8">
                                                                                     <item.icon/>
                                                                                 </div>
                                                                                 <div className="ml-2">

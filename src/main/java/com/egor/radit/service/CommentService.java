@@ -8,6 +8,7 @@ import com.egor.radit.model.User;
 import com.egor.radit.repository.CommentRepository;
 import com.egor.radit.repository.PostRepository;
 import com.egor.radit.repository.UserRepository;
+import com.github.marlonlom.utilities.timeago.TimeAgo;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class CommentService {
         List<CommentDto> response = new ArrayList<>();
         for (Comment comment : foundComments) {
             CommentDto commentDto = new CommentDto();
-            commentDto.setCreatedDate(comment.getCreatedDate());
+            commentDto.setDuration(TimeAgo.using(comment.getCreatedDate().toEpochMilli()));
             commentDto.setPostId(comment.getPost().getPostId());
             commentDto.setText(comment.getText());
             commentDto.setId(comment.getId());

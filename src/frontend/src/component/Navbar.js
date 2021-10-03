@@ -4,7 +4,7 @@ import {
 } from "react-icons/all";
 import SettingsMenu from "./SettingsMenu";
 import {Popover, RadioGroup, Transition} from '@headlessui/react'
-import {Fragment, useEffect, useState} from 'react'
+import {Fragment, useEffect} from 'react'
 import {Link, useLocation} from "react-router-dom";
 import {sections} from "../data/Data";
 
@@ -17,25 +17,21 @@ const Navbar = ({
                     sort,
                     setSort,
                     setPage,
-                    loadPosts
+                    section,
+                    setSection,
                 }) => {
-    const [section, setSection] = useState(sections[0]);
+
     let location = useLocation();
 
+    //Weird hack to handle the back button
     useEffect(() => {
-        const url = location.pathname.slice(1);
-        sections.forEach((x) => {
-            if (x['name'] === url) setSection(x);
-        });
-
-        if (url === null || url === '') {
-            setSection(sections[0]);
-        }
-    }, [location]);
-
+        setSection(sections.filter(s => s.name === location.pathname.substring(1))[0] || sections[0]);
+        setPage(0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location])
 
     return (
-        <div className="flex w-screen bg-white shadow-sm items-center justify-between h-14 px-8 z-20">
+        <div className="flex w-screen bg-white shadow-sm items-center justify-between h-14 px-2 lg:px-8 z-20">
             <div className="flex">
                 <a
                     href='/#'
@@ -45,15 +41,15 @@ const Navbar = ({
                 </a>
 
 
-                <div className="w-full ml-12 border border-gray-200 rounded-lg">
+                <div className="w-full ml-3 lg:ml-12 border border-gray-200 rounded-lg">
                     <Popover className="relative">
                         <>
                             <Popover.Button
                                 className="px-3 py-2">
-                                <div className="flex items-center w-56 justify-between">
+                                <div className="flex items-center w-12 md:w-56 justify-between">
                                     <div className="flex items-center">
-                                        {section.icon()}
-                                        <p className="text-gray-900 text-sm">{section.name}</p>
+                                        {section !== null ? section.icon() : sections[0].icon()}
+                                        <p className="hidden md:inline-block text-gray-900 text-sm">{section !== null ? section.name : sections[0].name}</p>
                                     </div>
                                     <FiChevronDown size={18} className="text-gray-900"/>
                                 </div>
@@ -68,29 +64,29 @@ const Navbar = ({
                                 leaveTo="opacity-0 translate-y-1"
                             >
                                 <Popover.Panel
-                                    className="absolute z-10 w-full max-w-sm mt-3 transform -translate-x-1/2 left-1/2">
+                                    className="absolute z-10 w-40 md:w-full max-w-sm mt-3 transform -translate-x-1/2 left-1/2">
                                     {({close}) => (
                                         <div
                                             className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                                            <div className="relative grid gap-8 bg-white p-7">
+                                            <div className="relative grid gap-8 bg-white p-3 md:p-7">
                                                 {sections.map((item) => (
                                                     <Link
                                                         onClick={() => {
-                                                            loadPosts(0, "voteCount", item['name']);
+                                                            setSection(item);
                                                             setPage(0);
                                                             setSort('voteCount');
                                                             close();
                                                         }}
                                                         key={item.name}
                                                         to={item.href}
-                                                        className="flex items-center py-1 px-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
+                                                        className="flex items-center py-1 px-1 md:px-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                                                     >
                                                         <div
-                                                            className="flex items-center justify-center flex-shrink-0 w-10 h-10 text-white sm:h-8">
+                                                            className="flex items-center justify-center flex-shrink-0 w-10 h-10 text-white md:h-8">
                                                             <item.icon/>
                                                         </div>
-                                                        <div className="ml-2">
-                                                            <p className="text-sm font-base text-gray-900">
+                                                        <div className="md:ml-2">
+                                                            <p className="text-md font-base text-gray-900">
                                                                 {item.name}
                                                             </p>
                                                         </div>
@@ -109,24 +105,23 @@ const Navbar = ({
                 <RadioGroup as="div" className="flex items-center" value={sort} onChange={async (e) => {
                     setSort(e);
                     setPage(0);
-                    await loadPosts(0, e, section.name);
                 }}>
-                    <div className="flex flex-row ml-4 space-x-3">
+                    <div className="flex flex-row items-center justify-center ml-4 space-x-3">
                         <RadioGroup.Option value="voteCount">
                             {({checked}) => (
                                 <div
-                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} shadow flex items-center cursor-pointer rounded-full text-white font-bold px-5 h-8`}>
-                                    <GoFlame className="mr-1" size={20}/>
-                                    <p className="font-custom text-lg">Hot</p>
+                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} items-center justify-center shadow flex items-center cursor-pointer rounded-full text-white font-bold w-9 sm:w-24 h-9`}>
+                                    <GoFlame className="sm:mr-1" size={20}/>
+                                    <p className="font-custom text-lg hidden sm:inline-block">Hot</p>
                                 </div>
                             )}
                         </RadioGroup.Option>
                         <RadioGroup.Option value="createdDate">
                             {({checked}) => (
                                 <div
-                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} shadow flex items-center cursor-pointer rounded-full text-white font-semibold px-5 h-8`}>
-                                    <GiNewShoot className="mr-1"/>
-                                    <p className='font-bold text-lg'>New</p>
+                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} items-center justify-center shadow flex items-center cursor-pointer rounded-full text-white font-bold  w-9 sm:w-24 h-9`}>
+                                    <GiNewShoot className="sm:mr-1"/>
+                                    <p className='font-bold text-lg hidden sm:inline-block'>New</p>
                                 </div>
                             )}
                         </RadioGroup.Option>
@@ -137,10 +132,10 @@ const Navbar = ({
             </div>
             <div className="space-x-2">
                 {loggedIn ?
-                    <div className="flex space-x-4 items-center">
+                    <div className="flex  items-center">
                         <button onClick={() => setIsPostModalOpen(true)}
-                                className="shadow text-lg cursor-pointer rounded-full text-white font-bold py-1 px-4 bg-gradient-to-r from-red-600 to-yellow-500">
-                            Post 🚀
+                                className="sm:mx-5 mx-2 shadow text-lg cursor-pointer rounded-full text-white font-bold py-1 px-4 bg-gradient-to-r from-red-600 to-yellow-500">
+                            Post <span className="hidden sm:inline-block">🚀</span>
                         </button>
                         <SettingsMenu handleLogout={logout}/>
                     </div>

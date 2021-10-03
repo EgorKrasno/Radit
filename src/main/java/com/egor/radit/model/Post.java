@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -23,7 +22,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long postId;
-    @NotBlank(message = "Title cannot be empty or Null")
+    @NotBlank(message = "Title cannot be empty")
     private String title;
 
     private String imagePath;
@@ -32,7 +31,7 @@ public class Post {
     @Lob
     private String content;
 
-    private Integer voteCount = 0;
+    private int voteCount = 0;
 
     private int commentCount = 0;
 
@@ -43,7 +42,6 @@ public class Post {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "sectionId", referencedColumnName = "sectionId")
     private Section section;
-
 
     private Instant createdDate;
 }

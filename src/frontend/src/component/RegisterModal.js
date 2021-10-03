@@ -4,7 +4,7 @@ import {useForm} from "react-hook-form";
 
 const RegisterModal = ({closeModal, isOpen, handleRegister}) => {
     const [errorMessage, setErrorMessage] = useState("");
-    const {register, handleSubmit, watch, reset, formState: {errors, isValid}} = useForm({mode: 'onChange'});
+    const {register, handleSubmit, watch, reset, formState: {errors}} = useForm({mode: 'onChange'});
     const password = useRef({});
     password.current = watch("password", "");
 

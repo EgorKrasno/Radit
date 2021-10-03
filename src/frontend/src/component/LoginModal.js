@@ -1,6 +1,5 @@
 import {Dialog, Transition} from "@headlessui/react";
-import {Fragment, useEffect, useState} from "react";
-import {createPost} from "../service/service";
+import {Fragment, useState} from "react";
 
 const LoginModal = ({closeModal, isOpen, handleLogin}) => {
     const [errorMessage, setErrorMessage] = useState("");
