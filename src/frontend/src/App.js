@@ -5,7 +5,7 @@ import LoginModal from "./component/LoginModal";
 import RegisterModal from "./component/RegisterModal";
 import Navbar from "./component/Navbar";
 import {Toaster} from "react-hot-toast";
-import {HashRouter, Route, Switch} from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 import Home from "./component/Home";
 import {sections} from "./data/Data";
 import UserPage from "./component/UserPage";
@@ -16,33 +16,29 @@ const App = () => {
     const [isPostModalOpen, setIsPostModalOpen] = useState(false)
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false)
-    const [page, setPage] = useState(0);
-    const [sort, setSort] = useState("voteCount");
-    const [refresh, setRefresh] = useState(false);
-    const [section, setSection] = useState(sections.filter(s => s.name === window.location.hash.substring(2))[0] || sections[0]);
 
 
     useEffect(() => {
-        async function fetchHealth() {
-            try {
-                await health();
-            } catch (e) {
-                localStorage.clear();
-                setLoggedIn(false);
-            }
-        }
+        // async function fetchHealth() {
+        //     try {
+        //         await health();
+        //     } catch (e) {
+        //         localStorage.clear();
+        //         setLoggedIn(false);
+        //     }
+        // }
 
-        if(localStorage.getItem("userData") !== null){
+        if (localStorage.getItem("userData") !== null) {
             const data = localStorage.getItem("userData");
             const initialValue = JSON.parse(data);
             setUserData(initialValue);
         } else {
-           localStorage.clear();
+            localStorage.clear();
             setUserData({username: "", roles: []});
-           setLoggedIn(false);
+            setLoggedIn(false);
         }
 
-        fetchHealth();
+        // fetchHealth();
     }, []);
 
     const handleLogin = async (user) => {
@@ -79,77 +75,54 @@ const App = () => {
         setUserData({username: "", roles: []});
     }
 
-    //cause a refresh on of the posts after post is created
-    const postCreated = () => {
-        if (sort === 'createdDate' && page === 0) {
-            //force a refresh of board if we are on the first page new
-            setRefresh(!refresh);
-        } else {
-            setSort('createdDate')
-            setPage(0);
-        }
-    };
-
-
     return (
-        <HashRouter>
-            <div className="flex flex-col h-screen">
-                <Navbar loggedIn={loggedIn}
-                        logout={logout}
-                        sort={sort}
-                        setSort={setSort}
-                        setPage={setPage}
-                        userData={userData}
-                        section={section}
-                        setSection={setSection}
-                        setIsPostModalOpen={() => setIsPostModalOpen(true)}
-                        setIsRegisterModalOpen={() => setIsRegisterModalOpen(true)}
-                        setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>
+        <div className="flex flex-col h-screen">
+            <Navbar loggedIn={loggedIn}
+                    logout={logout}
+                    userData={userData}
+                    setIsPostModalOpen={() => setIsPostModalOpen(true)}
+                    setIsRegisterModalOpen={() => setIsRegisterModalOpen(true)}
+                    setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>
 
 
-                <PostModal isOpen={isPostModalOpen}
-                           section={section}
-                           postCreated={postCreated}
-                           closeModal={() => setIsPostModalOpen(false)}/>
-                <LoginModal isOpen={isLoginModalOpen}
-                            handleLogin={handleLogin}
-                            closeModal={() => setIsLoginModalOpen(false)}/>
-                <RegisterModal isOpen={isRegisterModalOpen}
-                               handleRegister={handleRegister}
-                               closeModal={() => setIsRegisterModalOpen(false)}/>
+            <PostModal isOpen={isPostModalOpen}
+                       closeModal={() => setIsPostModalOpen(false)}/>
+            <LoginModal isOpen={isLoginModalOpen}
+                        handleLogin={handleLogin}
+                        closeModal={() => setIsLoginModalOpen(false)}/>
+            <RegisterModal isOpen={isRegisterModalOpen}
+                           handleRegister={handleRegister}
+                           closeModal={() => setIsRegisterModalOpen(false)}/>
 
-                <Toaster
-                    toastOptions={{
-                        success: {
-                            style: {
-                                background: '#E0F5E9',
-                            },
+            <Toaster
+                toastOptions={{
+                    success: {
+                        style: {
+                            background: '#E0F5E9',
                         },
-                        error: {
-                            style: {
-                                background: '#FADEDE',
-                            },
+                    },
+                    error: {
+                        style: {
+                            background: '#FADEDE',
                         },
-                    }}
-                />
-                <Switch>
-                    <Route exact path="/user/:username" component={UserPage}/>
-                    {sections.map(s =>
-                        <Route exact path={s.path} key={s.name}>
-                            <Home sort={sort}
-                                  user={userData}
-                                  refresh={refresh}
-                                  setSort={setSort}
-                                  page={page}
-                                  section={section}
-                                  loggedIn={loggedIn}
-                                  setPage={setPage}
-                                  setIsLoginModalOpen={setIsLoginModalOpen}/>
-                        </Route>
-                    )}
-                </Switch>
-            </div>
-        </HashRouter>
+                    },
+                }}
+            />
+            <Switch>
+                <Route exact path="/">
+                    <Redirect to="/j/all"/>
+                </Route>
+                <Route path="/user/:username" component={UserPage}/>
+                {sections.map(s =>
+                    <Route exact path="/j/:sectionName" key={s.name}>
+                        <Home
+                            user={userData}
+                            loggedIn={loggedIn}
+                            setIsLoginModalOpen={setIsLoginModalOpen}/>
+                    </Route>
+                )}
+            </Switch>
+        </div>
     );
 }
 

@@ -4,8 +4,8 @@ import {
 } from "react-icons/all";
 import SettingsMenu from "./SettingsMenu";
 import {Popover, RadioGroup, Transition} from '@headlessui/react'
-import {Fragment, useEffect} from 'react'
-import {Link, useLocation} from "react-router-dom";
+import {Fragment, useEffect, useState} from 'react'
+import {Link, useHistory, useLocation} from "react-router-dom";
 import {sections} from "../data/Data";
 
 const Navbar = ({
@@ -14,32 +14,30 @@ const Navbar = ({
                     setIsPostModalOpen,
                     setIsRegisterModalOpen,
                     setIsLoginModalOpen,
-                    sort,
-                    setSort,
-                    setPage,
-                    section,
-                    setSection,
                     userData,
                 }) => {
 
     let location = useLocation();
+    let history = useHistory();
+    const [selected, setSelected] = useState("voteCount")
+    const [section, setSection] = useState(sections.filter(s => s.name === location.pathname.substring(3))[0] || sections[0]);
 
     //Weird hack to handle the back button
     useEffect(() => {
-        setSection(sections.filter(s => s.name === location.pathname.substring(1))[0] || sections[0]);
-        setPage(0);
+        setSection(sections.filter(s => s.name === location.pathname.substring(3))[0] || sections[0]);
+        setSelected(location.search.split('=')[1] || 'voteCount')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location])
 
     return (
         <div className="flex w-screen bg-white shadow-sm items-center justify-between h-14 px-2 lg:px-8 z-20">
             <div className="flex">
-                <a
-                    href='/#'
+                <Link
+                    to="/"
                     className="cursor-pointer flex items-center text-3xl text-red-500 space-x-1">
                     <GiChiliPepper size={34} className="text-red-500"/>
                     <p className="hidden sm:inline-block font-custom ">Spicy</p>
-                </a>
+                </Link>
 
 
                 <div className="w-full ml-3 lg:ml-12 border border-gray-200 rounded-lg">
@@ -74,12 +72,14 @@ const Navbar = ({
                                                     <Link
                                                         onClick={() => {
                                                             setSection(item);
-                                                            setPage(0);
-                                                            setSort('voteCount');
+                                                            setSelected('voteCount');
                                                             close();
                                                         }}
                                                         key={item.name}
-                                                        to={item.href}
+                                                        to={{
+                                                            pathname: `/j/${item.name}`,
+                                                            search: `?sortBy=voteCount`
+                                                        }}
                                                         className="flex items-center py-1 px-1 md:px-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                                                     >
                                                         <div
@@ -103,9 +103,12 @@ const Navbar = ({
 
                     </Popover>
                 </div>
-                <RadioGroup as="div" className="flex items-center" value={sort} onChange={async (e) => {
-                    setSort(e);
-                    setPage(0);
+                <RadioGroup as="div" className="flex items-center" value={selected} onChange={async (v) => {
+                    history.push({
+                        pathname: `/j/${section.name}`,
+                        search: `?sortBy=${v}`
+                    })
+                    setSelected(v);
                 }}>
                     <div className="flex flex-row items-center justify-center ml-4 space-x-3">
                         <RadioGroup.Option value="voteCount">

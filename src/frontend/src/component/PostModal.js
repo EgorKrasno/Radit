@@ -5,20 +5,23 @@ import toast from "react-hot-toast";
 import {
     FiChevronUp,
 } from "react-icons/all";
-import {postModalSections} from "../data/Data";
+import {postModalSections, sections} from "../data/Data";
+import {useHistory, useLocation} from "react-router-dom";
 
-const PostModal = ({closeModal, isOpen, section, postCreated}) => {
+const PostModal = ({closeModal, isOpen}) => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [image, setImage] = useState({preview: "", raw: ""});
     const inputRef = useRef(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-
     const [sectionSelector, setSectionSelector] = useState(postModalSections[0]);
+    let location = useLocation();
+    let history = useHistory();
+
     useEffect(() => {
-        setSectionSelector(section.name.toLowerCase() === 'all' ? postModalSections[0] : section)
-    }, [section]);
+        setSectionSelector(postModalSections.filter(s => s.name === location.pathname.substring(3))[0] || postModalSections[0]);
+    }, [location]);
 
 
     const submitHandler = async (e) => {
@@ -41,7 +44,10 @@ const PostModal = ({closeModal, isOpen, section, postCreated}) => {
             formData.append("section", sectionSelector.name.toLowerCase())
             await createPost(formData);
             toast.success("Now that's a spicy 👍");
-            postCreated();
+            history.push({
+                pathname: `/j/${sectionSelector.name}`,
+                search: "?sortBy=createdDate"
+            })
             close();
         } catch (e) {
             setError(e.response.data);
@@ -204,8 +210,8 @@ const PostModal = ({closeModal, isOpen, section, postCreated}) => {
                                 </div>
                                 <button
                                     disabled={loading}
-                                    className={`${loading && 'opacity-75 cursor-not-allowed'} shadow-md w-full cursor-pointer rounded-lg text-white focus:outline-none font-bold font-custom text-2xl p-2 bg-gradient-to-r from-red-600 to-yellow-500`}>
-                                    {loading ? "Shitposting 💩" : "Post 🚀"}
+                                    className={`${loading && 'opacity-75 cursor-default'} shadow-md w-full cursor-pointer rounded-lg text-white focus:outline-none font-bold font-custom text-2xl p-2 bg-gradient-to-r from-red-600 to-yellow-500`}>
+                                    {loading ? "Posting..." : "Post 🚀"}
                                 </button>
                             </form>
                         </div>

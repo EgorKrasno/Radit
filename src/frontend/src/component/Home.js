@@ -1,24 +1,19 @@
 import Board from "./Board";
 import Leaderboard from "./Leaderboard";
+import {useEffect} from "react";
 
-const Home = ({page, loggedIn, setPage, setIsLoginModalOpen, sort, section, refresh, user}) => {
-
+const Home = ({loggedIn, setIsLoginModalOpen, user}) => {
 
     return (
         <div
-            className="flex flex-1 overflow-y-auto bg-gray-200 pb-8 w-full justify-center space-x-4 sm:space-x-6 pt-2 sm:pt-6 sm:px-6">
+            className="flex flex-1 overflow-y-auto bg-gray-200 pb-8 w-full justify-center space-x-4 sm:space-x-6 pt-2 sm:pt-6 sm:px-6 relative">
             <div className="max-w-screen-md w-full">
                 <Board
                     loggedIn={loggedIn}
                     user={user}
-                    refreshBoard={refresh}
-                    sort={sort}
-                    section={section}
-                    page={page}
-                    setPage={setPage}
                     setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>
             </div>
-            <div className="hidden tablet:inline-block w-80 space-y-6">
+            <div className="hidden tablet:inline-block w-80 space-y-6 sticky top-0">
                 <Leaderboard user={user}/>
             </div>
             {/*<div className="h-72 w-full bg-white rounded-xl shadow-md">*/}

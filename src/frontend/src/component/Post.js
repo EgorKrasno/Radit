@@ -2,13 +2,12 @@ import {
     AiOutlineComment,
     FaArrowDown,
     FaArrowUp, GiCheckedShield,
-    GiQueenCrown
 } from "react-icons/all";
 import {deletePost, vote} from "../service/service";
 import {useState} from "react";
 import Comments from "./Comments";
 import {postModalSections} from "../data/Data";
-import {Link} from "react-router-dom";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import DeletePostModal from "./DeletePostModal";
 import PostMenu from "./PostMenu";
 import toast from "react-hot-toast";
@@ -21,6 +20,8 @@ const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
     const [upvoteEffect, setUpvoteEffect] = useState(false);
     const [downvoteEffect, setDownvoteEffect] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    let history = useHistory();
+    let location = useLocation();
 
     const section = postModalSections.find(s => s.name.toLowerCase() === post.section)
 
@@ -49,7 +50,10 @@ const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
         try {
             await deletePost(post.id);
             toast.success("Spicy deleted");
-            refresh();
+            history.push({
+                pathname: `/j/${section.name}`,
+                search: `?sortBy=${location.search.split('=')[1] || 'voteCount'}`
+            })
         } catch (e) {
             toast.error("Something went wrong");
             console.log(e);
@@ -79,7 +83,7 @@ const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
                     </div>
                     <div className="flex-1">
                         <div className="flex justify-between max-h-96">
-                            <Link to={`/${section.name}`}
+                            <Link to={`/j/${section.name}`}
                                   className="text-sm pl-0.5 text-gray-900 hover:underline inline-flex mb-1 sm:mb-3 space-x-1">
                                 {section.icon(true)}
                                 <span>{section.name}</span>
