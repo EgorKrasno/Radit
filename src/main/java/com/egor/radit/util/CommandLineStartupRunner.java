@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
 @Component
@@ -37,7 +38,7 @@ public class CommandLineStartupRunner implements CommandLineRunner {
         userService.saveRole(new Role(1L, "ROLE_USER"));
         userService.saveRole(new Role(2L, "ROLE_ADMIN"));
         userService.saveRole(new Role(3L, "ROLE_SUPER_ADMIN"));
-        userService.register(new User(1L, "admin", secret, new ArrayList<>(), 0, 0, 0));
+        userService.register(new User(1L, "admin", secret, new ArrayList<>(), Instant.now(), 0, 0, 0));
         userService.addRoleToUser("Admin", "ROLE_SUPER_ADMIN");
     }
 }

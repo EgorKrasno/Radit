@@ -99,6 +99,7 @@ const App = () => {
                         sort={sort}
                         setSort={setSort}
                         setPage={setPage}
+                        userData={userData}
                         section={section}
                         setSection={setSection}
                         setIsPostModalOpen={() => setIsPostModalOpen(true)}

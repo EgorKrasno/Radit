@@ -3,6 +3,7 @@ package com.egor.radit.controller;
 
 import com.egor.radit.constant.SecurityConstant;
 import com.egor.radit.dto.RoleToUserDto;
+import com.egor.radit.dto.UserDataDto;
 import com.egor.radit.dto.UserResponse;
 import com.egor.radit.exception.RaditException;
 import com.egor.radit.model.Role;
@@ -48,7 +49,7 @@ public class UserController {
         UserResponse userResponse = new UserResponse();
         userResponse.setUsername(loginUser.getUsername());
         userResponse.setRoleList(loginUser.getRoles().stream().map(Role::getName).toList());
-        return new ResponseEntity<>(userResponse,jwtHeader, OK);
+        return new ResponseEntity<>(userResponse, jwtHeader, OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
@@ -81,10 +82,12 @@ public class UserController {
         return new ResponseEntity<>(BAD_REQUEST);
     }
 
-//    public ResponseEntity<?> userData(Authentication auth) {
-//        userService.getUserData(auth);
-//        return new ResponseEntity<>(null, OK);
-//    }
+
+//    @PreAuthorize("permitAll()")
+    @GetMapping("/user/data/{username}")
+    public ResponseEntity<UserDataDto> getUserData(@PathVariable String username) throws RaditException {
+        return new ResponseEntity<>(userService.getUserData(username), OK);
+    }
 
     private HttpHeaders getJwtHeader(UserPrincipal userPrincipal) {
         HttpHeaders headers = new HttpHeaders();

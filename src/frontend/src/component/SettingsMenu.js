@@ -1,13 +1,14 @@
 import {Menu, Transition} from "@headlessui/react";
-import {FiLogOut, FiSettings, FiUser} from "react-icons/fi";
+import {FiLogOut, RiAccountCircleFill, FiUser} from "react-icons/all";
 import {Fragment} from "react";
+import {Link} from "react-router-dom";
 
-const SettingsMenu = ({handleLogout}) => {
+const SettingsMenu = ({handleLogout, userData}) => {
     return (
         <Menu as="div" className="relative">
-            <Menu.Button as="div" className="cursor-pointer"><FiSettings
-                className="text-gray-500 hover:text-red-500 focus-outline-none"
-                size={24}/></Menu.Button>
+            <Menu.Button as="div" className="cursor-pointer"><RiAccountCircleFill
+                className="text-yellow-500 hover:text-red-500 focus-outline-none"
+                size={36}/></Menu.Button>
             <Transition
                 as={Fragment}
                 enter="transition ease-out duration-100"
@@ -22,16 +23,17 @@ const SettingsMenu = ({handleLogout}) => {
 
                     <Menu.Item as="div">
                         {({active}) => (
-
+                            <Link className="capitalize"
+                                  to={`/user/${userData.username}`}>
                             <button
-                                onClick={() => alert("Account page would go here if I had one")}
                                 className={`${
                                     active ? 'bg-gray-100 rounded-b-none' : ''
                                 } px-4 group flex rounded-md items-center w-full py-2 text-base`}
                             >
                                 <FiUser className="mr-3"/>
-                                Account
+                                My Profile
                             </button>
+                            </Link>
                         )}
                     </Menu.Item>
                     <Menu.Item as="div">

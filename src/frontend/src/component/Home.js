@@ -1,4 +1,5 @@
 import Board from "./Board";
+import Leaderboard from "./Leaderboard";
 
 const Home = ({page, loggedIn, setPage, setIsLoginModalOpen, sort, section, refresh, user}) => {
 
@@ -18,17 +19,14 @@ const Home = ({page, loggedIn, setPage, setIsLoginModalOpen, sort, section, refr
                     setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>
             </div>
             <div className="hidden tablet:inline-block w-80 space-y-6">
-                <div className="h-72 w-full bg-white rounded-xl shadow-md">
-                    <div className="p-3">
-                        <h1 className="text-center text-xl font-bold">Top</h1>
-                    </div>
-                </div>
-                <div className="h-72 w-full bg-white rounded-xl shadow-md">
-                    <div className="p-3">
-                        <h1 className="text-center text-xl font-bold">Buy Peppers</h1>
-                    </div>
-                </div>
+                <Leaderboard user={user}/>
             </div>
+            {/*<div className="h-72 w-full bg-white rounded-xl shadow-md">*/}
+            {/*    <div className="p-3">*/}
+            {/*        <h1 className="text-center text-xl font-bold">Buy Peppers</h1>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
+            {/*</div>*/}
         </div>
     )
 }

@@ -71,7 +71,7 @@ const Board = ({loggedIn, setIsLoginModalOpen, page, setPage, sort, section, ref
             }
         } else if (loading) {
             return <div className="w-full space-y-6">
-                {Array(5).fill(<div className="bg-white px-6 rounded-xl w-full pt-3 space-y-3 pb-3">
+                {Array(5).fill().map((item, i) => (<div key={i} className="bg-white px-6 rounded-xl w-full pt-3 space-y-3 pb-3">
                     <div className='flex w-full space-x-2'>
                         <Skeleton height={20} width={20} circle={true}/>
                         <Skeleton height={20} width={80}/>
@@ -85,7 +85,7 @@ const Board = ({loggedIn, setIsLoginModalOpen, page, setPage, sort, section, ref
                         </div>
                         <div className=""><Skeleton height={20} width={170}/></div>
                     </div>
-                </div>)}
+                </div>))}
             </div>
         }
     }

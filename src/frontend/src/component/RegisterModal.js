@@ -73,11 +73,11 @@ const RegisterModal = ({closeModal, isOpen, handleRegister}) => {
                                             message: "Username is required"
                                         },
                                         maxLength: {
-                                            value: 18,
+                                            value: 15,
                                             message: "username is invalid"
                                         },
                                         pattern: {
-                                            value: /^[a-z ,.'-]+$/i,
+                                            value: /^[a-z 0-9,.'-]+$/i,
                                             message: "Invalid Username"
                                         }
                                     })}

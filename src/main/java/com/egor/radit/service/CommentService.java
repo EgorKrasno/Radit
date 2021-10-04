@@ -31,11 +31,14 @@ public class CommentService {
         User user = userRepository.findByUsername(auth.getName())
                 .orElseThrow(() -> new RaditException("User not found"));
 
+        Comment newComment = commentMapper.map(commentDto, post, user);
+        commentRepository.save(newComment);
+
         post.setCommentCount(post.getCommentCount() + 1);
         postRepository.save(post);
 
-        Comment newComment = commentMapper.map(commentDto, post, user);
-        commentRepository.save(newComment);
+        user.setCommentCount(user.getCommentCount()+1);
+        userRepository.save(user);
     }
 
     public List<CommentDto> getAllCommentsForPost(Long postId) throws RaditException {

@@ -13,7 +13,15 @@ export const getPosts = async (pageNo, sortBy, section) => {
 }
 
 export const getComments = async (postId) => {
-    return await axios.get(`api/comments/${postId}`, {headers: {Authorization: `Bearer ${getToken()}`}});
+    return await axios.get(`api/comments/${postId}`);
+}
+
+export const getUserData = async (username) => {
+    return await axios.get(`api/user/data/${username}` );
+}
+
+export const getLeaderboard = async () => {
+    return await axios.get(`api/leaderboard/top`);
 }
 
 export const createComment = async (comment) => {
