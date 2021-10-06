@@ -1,7 +1,7 @@
 import {
-    AiOutlineComment,
+    AiOutlineComment, AiOutlineTrophy,
     FaArrowDown,
-    FaArrowUp, GiCheckedShield,
+    FaArrowUp, GiCheckedShield, GiChiliPepper,
 } from "react-icons/all";
 import {deletePost, vote} from "../service/service";
 import {useState} from "react";
@@ -11,8 +11,9 @@ import {Link, useHistory, useLocation} from "react-router-dom";
 import DeletePostModal from "./DeletePostModal";
 import PostMenu from "./PostMenu";
 import toast from "react-hot-toast";
+import AwardModal from "./AwardModal";
 
-const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
+const Post = ({post, openLoginModal, loggedIn, user}) => {
     const [voteDirection, setVoteDirection] = useState(post.userVote);
     const [voteCount, setVoteCount] = useState(post.voteCount);
     const [showComments, setShowComments] = useState(false);
@@ -20,6 +21,7 @@ const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
     const [upvoteEffect, setUpvoteEffect] = useState(false);
     const [downvoteEffect, setDownvoteEffect] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isAwardModalOpen, setIsAwardModalOpen] = useState(false);
     let history = useHistory();
     let location = useLocation();
 
@@ -62,9 +64,10 @@ const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
 
     return (
         <>
-            <div className="flex bg-white sm:rounded-xl shadow-md px-2 sm:px-6 py-3 sm:py-4 flex flex-col w-full">
+            <div className="flex bg-white sm:rounded-xl shadow-md flex flex-col w-full">
                 <div className="flex flex-1">
-                    <div className="flex flex-col justify-center items-center pr-2 sm:pr-6 space-y-1.5">
+                    <div
+                        className={`${showComments ? "rounded-tl-xl rounded-br-xl" : "rounded-l-xl"} flex flex-col justify-center items-center px-2.5 space-y-0.5 bg-gray-100`}>
                         <div className={`${upvoteEffect && "animate-upvote"}`}
                              onAnimationEnd={() => setUpvoteEffect(false)}
                              onClick={() => handleVote(1)}>
@@ -81,35 +84,45 @@ const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
                                          className={`${voteDirection === -1 && "text-blue-600"} cursor-pointer text-gray-500 hover:text-blue-600`}/>
                         </div>
                     </div>
-                    <div className="flex-1">
-                        <div className="flex justify-between max-h-96">
+                    <div className="flex-1 p-2.5">
+                        <div className="flex justify-between">
                             <Link to={`/j/${section.name}`}
-                                  className="text-sm pl-0.5 text-gray-900 hover:underline inline-flex mb-1 sm:mb-3 space-x-1">
+                                  className="text-sm pl-0.5 text-gray-900 hover:underline inline-flex mb-1 sm:mb-1.5 space-x-1">
                                 {section.icon(true)}
                                 <span>{section.name}</span>
                             </Link>
                             {user.username === post.userName && <PostMenu handleDelete={openDeleteModal}/>}
                         </div>
-                        <h1 className="text-left text-gray-900 text-xl mb-2 sm:mb-3 font-bold">{post.title[0].toUpperCase() + post.title.substring(1)}</h1>
+                        <h1 className="text-left text-gray-900 text-2xl mb-2 sm:mb-3 font-bold">{post.title[0].toUpperCase() + post.title.substring(1)}</h1>
                         {post.imageUrl &&
                         <div className="flex justify-center mb-2 mt-3">
                             {window.screen.width > 640 ?
                                 <a href={post.imageUrl} target="_blank" rel="noopener noreferrer">
-                                    <img src={post.imageUrl} alt=""/>
+                                    <img style={{maxHeight: '640px'}} src={post.imageUrl} alt=""/>
                                 </a> :
                                 <img src={post.imageUrl} alt=""/>
                             }
                         </div>}
                         {post.content && <p className="text-gray-900">{post.content}</p>}
+
+                        {/*Bottom Bar*/}
                         <div className="flex justify-between items-center pt-3 sm:pt-4">
-                            <button
-                                onClick={() => setShowComments(!showComments)}
-                                className="flex items-center text-gray-600 space-x-1 cursor-pointer hover:text-red-500">
-                                <AiOutlineComment size={22}/>
-                                <p className="text-sm">{post.commentCount + localCommentAdd} <span
-                                    className="hidden sm:inline-block">{post.commentCount === 1 ? "Comment" : "Comments"}</span>
-                                </p>
-                            </button>
+                            <div className="flex space-x-6">
+                                <button
+                                    onClick={() => setShowComments(!showComments)}
+                                    className="flex items-center text-gray-600 space-x-1 cursor-pointer hover:text-red-500">
+                                    <AiOutlineComment size={22}/>
+                                    <p className="text-sm">{post.commentCount + localCommentAdd} <span
+                                        className="hidden sm:inline-block">{post.commentCount === 1 ? "Comment" : "Comments"}</span>
+                                    </p>
+                                </button>
+                                <div
+                                    onClick={() => setIsAwardModalOpen(true)}
+                                    className="flex text-sm text-gray-600 items-center hover:text-red-500 cursor-pointer group">
+                                    <GiChiliPepper className="mr-0.5 group-hover:animate-spin text-red-500" size="22"/>
+                                    <p>Award</p>
+                                </div>
+                            </div>
                             <p className="flex items-center text-xs text-gray-600">
                                 <span className="hidden sm:inline-block">Posted by&nbsp;</span>
                                 <Link className="capitalize hover:underline"
@@ -130,6 +143,12 @@ const Post = ({post, openLoginModal, loggedIn, refresh, user}) => {
             <DeletePostModal isOpen={isDeleteModalOpen}
                              handleDelete={handleDelete}
                              closeModal={() => setIsDeleteModalOpen(false)}/>
+
+            <AwardModal
+                isOpen={isAwardModalOpen}
+                closeModal={() => setIsAwardModalOpen(false)}
+            />
+
 
         </>
     )

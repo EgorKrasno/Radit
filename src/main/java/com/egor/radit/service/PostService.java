@@ -76,7 +76,7 @@ public class PostService {
     //Convert to Mapper method
     public PostResponseWrapper getAllPosts(Authentication auth, int pageNo, int pageSize, String sortBy, String section) throws RaditException {
         Page<Post> pageResult;
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by((Sort.Order.desc(sortBy)), Sort.Order.desc("postId")));
 
         //Check if user is signed in or not, there is probably a better way to do this
         User user = userRepository.findByUsername(auth != null ? auth.getName() : null).orElse(null);

@@ -31,6 +31,7 @@ public class CommandLineStartupRunner implements CommandLineRunner {
         sectionRepository.save(new Section(2L, "beans"));
         sectionRepository.save(new Section(3L, "programming"));
         sectionRepository.save(new Section(4L, "random"));
+        sectionRepository.save(new Section(5L, "zuck"));
 
         if (userRepository.findByUsername("admin").isPresent()) {
             return;

@@ -1,4 +1,11 @@
-import {AiFillHome, GiCoffeeBeans, GiDespair, GiFossil, GiPerspectiveDiceSixFacesRandom} from "react-icons/all";
+import {
+    AiFillHome,
+    GiCoffeeBeans,
+    GiDespair,
+    GiFossil,
+    GiPerspectiveDiceSixFacesRandom,
+    RiAliensFill
+} from "react-icons/all";
 
 export const sections = [
     {
@@ -25,6 +32,12 @@ export const sections = [
         name: 'Random',
         href: '/Random',
         icon: (small) => <GiPerspectiveDiceSixFacesRandom className={`${!small && "mr-2"} text-red-600`}
+                                                          size={small ? 18 : 22}/>
+    },
+    {
+        name: 'Zuck',
+        href: '/Zuck',
+        icon: (small) => <RiAliensFill className={`${!small && "mr-2"} text-purple-600`}
                                                           size={small ? 18 : 22}/>
     }
 ]

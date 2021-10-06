@@ -69,17 +69,21 @@ const Navbar = ({
                                             className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                                             <div className="relative grid gap-8 bg-white p-3 md:p-7">
                                                 {sections.map((item) => (
-                                                    <Link
+                                                    <button
+                                                        key={item.name}
                                                         onClick={() => {
+                                                            if (section === item.name) {
+                                                                return
+                                                            }
+                                                            history.push({
+                                                                pathname: `/j/${item.name}`,
+                                                                search: `?sortBy=voteCount`
+                                                            });
                                                             setSection(item);
                                                             setSelected('voteCount');
                                                             close();
                                                         }}
-                                                        key={item.name}
-                                                        to={{
-                                                            pathname: `/j/${item.name}`,
-                                                            search: `?sortBy=voteCount`
-                                                        }}
+
                                                         className="flex items-center py-1 px-1 md:px-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                                                     >
                                                         <div
@@ -91,7 +95,7 @@ const Navbar = ({
                                                                 {item.name}
                                                             </p>
                                                         </div>
-                                                    </Link>
+                                                    </button>
                                                 ))}
                                             </div>
                                         </div>

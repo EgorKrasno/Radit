@@ -58,7 +58,7 @@ const Leaderboard = ({user}) => {
 
     return (
         <div className="h-80 w-full bg-white rounded-xl shadow-md">
-            <h1 className="mx-8 pt-3 text-3xl font-custom font-bold">Top Spicy Bois</h1>
+            <h1 className="mx-8 pt-3 text-2xl font-bold">Top Spicy Bois</h1>
             <div className="divide-y divide-gray-200">
                 {!loading && createLeaderboard()}
             </div>

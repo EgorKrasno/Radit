@@ -44,9 +44,10 @@ const PostModal = ({closeModal, isOpen}) => {
             formData.append("section", sectionSelector.name.toLowerCase())
             await createPost(formData);
             toast.success("Now that's a spicy 👍");
-            history.push({
+            history.replace({
                 pathname: `/j/${sectionSelector.name}`,
-                search: "?sortBy=createdDate"
+                search: "?sortBy=createdDate",
+                state: {refresh: true}
             })
             close();
         } catch (e) {

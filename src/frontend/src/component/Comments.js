@@ -41,14 +41,14 @@ const Comments = ({post, addLocalComment, loggedIn, openLoginModal}) => {
 
     return (
         <>
-            <div className="mt-5 divide-y divide-gray-300 sm:max-h-96 sm:overflow-y-auto comments">
+            <div className="mt-2 divide-y divide-gray-300 sm:max-h-96 sm:overflow-y-auto comments">
                 {(comments !== null && comments.length > 0) && comments.map((c) => <Comment key={c.id} data={c}/>)}
             </div>
-            <div className="border rounded-md my-3 flex flex-col focus-within:border-red-500">
+            <div className="border mx-3 mb-4 rounded-md flex flex-col focus-within:border-red-500">
             <textarea
                 placeholder="Add a comment"
                 rows={3}
-                className="outline-none rounded-md py-2 px-4"
+                className="outline-none rounded-xl py-2 px-4"
                 value={comment}
                 onChange={e => setComment(e.target.value)}
             />

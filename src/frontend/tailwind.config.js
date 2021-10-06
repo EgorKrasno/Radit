@@ -23,16 +23,23 @@ module.exports = {
                     "40%": {transform: "scale(.8,1.2)"},
                     "50%": {transform: 'translateY(-18px) scale(1.1,.90)'},
                     "100%": {transform: "scale(1,1)"},
+                },
+                award: {
+                    "0%": {transform: "translateY(0px)"},
+                    "100%": {transform: "translateY(-10px)"},
                 }
             },
             animation: {
                 wiggle: "wiggle 250ms ease-out",
                 upvote: "upvote 400ms cubic-bezier(.26,.72,.6,.59)",
+                award: "award 500ms infinite alternate",
             }
         },
     },
     variants: {
-        extend: {},
+        extend: {
+            animation: ['hover', 'group-hover']
+        },
     },
     plugins: [],
 }

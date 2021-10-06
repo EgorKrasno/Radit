@@ -32,7 +32,7 @@ const UserPage = () => {
 
     return (
         <div className="flex-1 bg-gray-200 overflow-y-auto flex justify-center">
-            <div className="max-w-screen-md w-full bg-white h-1/3 m-8 p-8 rounded-xl shadow-md">
+            <div className="max-w-screen-md w-full bg-white m-8 p-8 rounded-xl shadow-md">
                 {!loading ?
                     <>
                         <div className="m-4 space-y-4 flex flex-col items-center">

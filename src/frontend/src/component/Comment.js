@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 
 const Comment = ({data}) => {
     return (
-        <div className="py-4 flex flex-col space-y-2">
+        <div className="py-4 px-3 flex flex-col space-y-2">
             <div className="flex space-x-2 items-center">
 
                 <Link to={`/user/${data.userName}`}

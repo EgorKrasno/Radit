@@ -5,12 +5,13 @@ import LoginModal from "./component/LoginModal";
 import RegisterModal from "./component/RegisterModal";
 import Navbar from "./component/Navbar";
 import {Toaster} from "react-hot-toast";
-import {Redirect, Route, Switch} from "react-router-dom";
+import {Redirect, Route, Switch, useHistory} from "react-router-dom";
 import Home from "./component/Home";
 import {sections} from "./data/Data";
 import UserPage from "./component/UserPage";
 
 const App = () => {
+    let history = useHistory();
     const [loggedIn, setLoggedIn] = useState(localStorage.getItem("token") !== null);
     const [userData, setUserData] = useState({username: "", roles: []});
     const [isPostModalOpen, setIsPostModalOpen] = useState(false)
@@ -64,14 +65,24 @@ const App = () => {
         const token = response.headers["jwt-token"];
         const data = response.data;
         localStorage.setItem("token", JSON.stringify(token));
-        localStorage.setItem("userData", JSON.stringify(data))
+        localStorage.setItem("userData", JSON.stringify(data));
         setUserData(data);
+        history.replace({
+            pathname: `/j/All`,
+            search: "?sortBy=voteCount",
+            state: {refresh: true}
+        })
         setLoggedIn(true);
     }
 
     const logout = async () => {
         localStorage.clear();
         setLoggedIn(false);
+        history.replace({
+            pathname: `/j/All`,
+            search: "?sortBy=voteCount",
+            state: {refresh: true}
+        })
         setUserData({username: "", roles: []});
     }
 
@@ -110,7 +121,7 @@ const App = () => {
             />
             <Switch>
                 <Route exact path="/">
-                    <Redirect to="/j/all"/>
+                    <Redirect to="/j/All?sortBy=voteCount"/>
                 </Route>
                 <Route path="/user/:username" component={UserPage}/>
                 {sections.map(s =>

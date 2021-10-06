@@ -9,9 +9,8 @@ spring:
       max-file-size: 2MB
       max-request-size: 2MB
   jpa:
-    show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         jdbc:
