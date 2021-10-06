@@ -9,7 +9,10 @@ const getToken = () => {
 }
 
 export const getPosts = async (pageNo, sortBy, section) => {
-    return await axios.get(`j/${section}`, {headers: {Authorization: `Bearer ${getToken()}`}, params: {pageNo, sortBy}});
+    return await axios.get(`j/${section}`, {
+        headers: {Authorization: `Bearer ${getToken()}`},
+        params: {pageNo, sortBy}
+    });
 }
 
 export const getComments = async (postId) => {
@@ -55,6 +58,17 @@ export const vote = async (vote) => {
 }
 
 export const health = async () => {
-    return await axios.get(`$/api/user/health`, {headers: {Authorization: `Bearer ${getToken()}`}})
+    return await axios.get(`/api/user/health`, {headers: {Authorization: `Bearer ${getToken()}`}})
 }
 
+export const onToken = async (token, awardId) => {
+    const response = await axios.post("/api/payment/charge", "", {
+        headers: {
+            Authorization: `Bearer ${getToken()}`,
+            'token': token.id,
+            'id': awardId
+        }
+    });
+    console.log(response.data);
+
+}

@@ -87,7 +87,7 @@ const Post = ({post, openLoginModal, loggedIn, user}) => {
                     <div className="flex-1 p-2.5">
                         <div className="flex justify-between">
                             <Link to={`/j/${section.name}`}
-                                  className="text-sm pl-0.5 text-gray-900 hover:underline inline-flex mb-1 sm:mb-1.5 space-x-1">
+                                  className="text-sm text-gray-900 hover:underline inline-flex mb-1 sm:mb-1.5 space-x-1">
                                 {section.icon(true)}
                                 <span>{section.name}</span>
                             </Link>
@@ -111,7 +111,7 @@ const Post = ({post, openLoginModal, loggedIn, user}) => {
                                 <button
                                     onClick={() => setShowComments(!showComments)}
                                     className="flex items-center text-gray-600 space-x-1 cursor-pointer hover:text-red-500">
-                                    <AiOutlineComment size={22}/>
+                                    <AiOutlineComment size={24}/>
                                     <p className="text-sm">{post.commentCount + localCommentAdd} <span
                                         className="hidden sm:inline-block">{post.commentCount === 1 ? "Comment" : "Comments"}</span>
                                     </p>
@@ -119,7 +119,7 @@ const Post = ({post, openLoginModal, loggedIn, user}) => {
                                 <div
                                     onClick={() => setIsAwardModalOpen(true)}
                                     className="flex text-sm text-gray-600 items-center hover:text-red-500 cursor-pointer group">
-                                    <GiChiliPepper className="mr-0.5 group-hover:animate-spin text-red-500" size="22"/>
+                                    <GiChiliPepper className="mr-0.5 text-red-500" size="24"/>
                                     <p>Award</p>
                                 </div>
                             </div>
