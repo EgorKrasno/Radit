@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,4 +21,5 @@ public class PostResponseDto {
     private int voteCount;
     private int commentCount;
     private int userVote;
+    private Map<Long, Integer> awards;
 }

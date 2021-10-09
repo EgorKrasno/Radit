@@ -4,12 +4,11 @@ import com.egor.radit.dto.PostResponseDto;
 import com.egor.radit.dto.PostResponseWrapper;
 import com.egor.radit.exception.RaditException;
 import com.egor.radit.mapper.PostMapper;
+import com.egor.radit.model.Award;
 import com.egor.radit.model.Post;
 import com.egor.radit.model.Section;
 import com.egor.radit.model.User;
-import com.egor.radit.model.Vote;
 import com.egor.radit.repository.*;
-import com.github.marlonlom.utilities.timeago.TimeAgo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.apache.http.entity.ContentType.*;
@@ -99,7 +97,7 @@ public class PostService {
 
         //Map all responses
         List<PostResponseDto> postList = pageResult.getContent().stream()
-                .map(x -> postMapper.mapToDto(x, user))
+                .map(post -> postMapper.mapToDto(post, user))
                 .collect(toList());
 
         PostResponseWrapper response = new PostResponseWrapper();
@@ -124,6 +122,15 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    public void addAward(long postId, Award award) throws RaditException {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RaditException("Post not found"));
+
+        List<Award> awardsList = post.getAwards();
+        awardsList.add(award);
+        post.setAwards(awardsList);
+        postRepository.save(post);
+    }
+
     private void uploadFile(MultipartFile file, String path, String fileName) {
         if (!Arrays.asList(IMAGE_PNG.getMimeType(),
                 IMAGE_BMP.getMimeType(),
@@ -138,4 +145,6 @@ public class PostService {
             throw new IllegalStateException("Failed to upload file", e);
         }
     }
+
+
 }

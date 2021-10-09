@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react'
 import {health, login, register} from "./service/service";
-import PostModal from "./component/PostModal";
-import LoginModal from "./component/LoginModal";
-import RegisterModal from "./component/RegisterModal";
+import PostModal from "./component/modal/PostModal";
+import LoginModal from "./component/modal/LoginModal";
+import RegisterModal from "./component/modal/RegisterModal";
 import Navbar from "./component/Navbar";
 import {Toaster} from "react-hot-toast";
 import {Redirect, Route, Switch, useHistory} from "react-router-dom";

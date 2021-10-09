@@ -7,6 +7,7 @@ services:
     restart: "always"
     environment:
       PASSWORD: ${ADMIN}
+      STRIPE: ${STRIPE}
       JWT: ${JWT_SECRET}
       AWSKEY: ${AWS_KEY}
       AWSSECRET: ${AWS_SECRET}

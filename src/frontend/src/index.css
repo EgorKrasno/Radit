@@ -5,10 +5,29 @@
 @tailwind components;
 @tailwind utilities;
 
+.dark .main-scrollbar::-webkit-scrollbar {
+    width: 10px;
+}
 
-/* width */
+/* Track */
+.dark .main-scrollbar::-webkit-scrollbar-track {
+    background: #1F2937;
+}
+
+/* Handle */
+.dark .main-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+.dark .main-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
 .comments::-webkit-scrollbar {
-    width: 0.25rem;
+    width: 0.35rem;
 }
 
 /* Track */
@@ -16,15 +35,28 @@
     background: #ffffff;
 }
 
+.dark .comments::-webkit-scrollbar-track {
+    background: #4B5563;
+}
+
+.dark .comments::-webkit-scrollbar-track {
+    background: #1F2937;
+}
+
 /* Handle */
 .comments::-webkit-scrollbar-thumb {
-    background: #EF8019;
+    background: #C1C1C1;
+    border-radius: 10px;
+}
+
+.dark .comments::-webkit-scrollbar-thumb {
+    background: #888888;
     border-radius: 10px;
 }
 
 /* Handle on hover */
 .comments::-webkit-scrollbar-thumb:hover {
-    background: #EF8019;
+    background: #4B5563;
 }
 
 .react-icons {

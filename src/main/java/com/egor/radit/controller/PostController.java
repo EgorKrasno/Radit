@@ -42,13 +42,10 @@ public class PostController {
     @GetMapping("/j/{section}")
     public ResponseEntity<PostResponseWrapper> getAllPosts(Authentication auth,
                                                            @PathVariable String section,
-//                                                           @PathVariable Optional<String> sortBy,
                                                            @RequestParam(defaultValue = "voteCount") String sortBy,
                                                            @RequestParam(defaultValue = "0") int pageNo,
                                                            @RequestParam(defaultValue = "5") int pageSize
-//                                                           @RequestParam(defaultValue = "all") String section
     ) throws RaditException {
-//        String sort = sortBy.isEmpty() ? "voteCount" : sortBy.get();
         return new ResponseEntity<>(postService.getAllPosts(auth, pageNo, pageSize, sortBy, section), HttpStatus.OK);
     }
 

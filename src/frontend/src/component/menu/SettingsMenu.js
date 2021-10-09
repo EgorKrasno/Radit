@@ -19,7 +19,7 @@ const SettingsMenu = ({handleLogout, userData}) => {
                 leaveTo="transform opacity-0 scale-95"
             >
                 <Menu.Items
-                    className="bg-white absolute right-0 w-52 mt-3 origin-top-right divide-y divide-gray-300 divide-opacity-75 rounded-lg shadow-md focus:outline-none border border-gray-300 border-opacity-75">
+                    className="dark:bg-gray-800 bg-white absolute right-0 w-52 mt-3 origin-top-right divide-y dark:divide-gray-700 divide-gray-300 divide-opacity-75 rounded-lg shadow-md focus:outline-none border dark:border-gray-700 border-gray-300 border-opacity-75">
 
                     <Menu.Item as="div">
                         {({active}) => (
@@ -27,8 +27,8 @@ const SettingsMenu = ({handleLogout, userData}) => {
                                   to={`/user/${userData.username}`}>
                             <button
                                 className={`${
-                                    active ? 'bg-gray-100 rounded-b-none' : ''
-                                } px-4 group flex rounded-md items-center w-full py-2 text-base`}
+                                    active ? 'dark:bg-gray-700 bg-gray-100 rounded-b-none' : ''
+                                } px-4 group flex rounded-md items-center w-full py-2 dark:text-gray-100 text-gray-900 text-base`}
                             >
                                 <FiUser className="mr-3"/>
                                 My Profile
@@ -41,8 +41,8 @@ const SettingsMenu = ({handleLogout, userData}) => {
                             <button
                                 onClick={handleLogout}
                                 className={`${
-                                    active ? 'bg-gray-100 rounded-t-none' : ''
-                                } px-4 group flex rounded-md items-center w-full py-2.5 text-base`}
+                                    active ? 'dark:bg-gray-700 bg-gray-100 rounded-t-none' : ''
+                                } px-4 group flex rounded-md items-center w-full py-2.5 dark:text-gray-100 text-gray-900 text-base`}
                             >
                                 <FiLogOut className="mr-3"/>
                                 Logout

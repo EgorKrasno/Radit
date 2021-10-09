@@ -4,6 +4,7 @@ import com.egor.radit.exception.RaditException;
 import com.egor.radit.model.Award;
 import com.egor.radit.repository.AwardRepository;
 import com.egor.radit.service.PaymentGatewayService;
+import com.egor.radit.service.PostService;
 import com.stripe.exception.CardException;
 import com.stripe.model.Charge;
 import lombok.RequiredArgsConstructor;
@@ -18,29 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class AwardController {
 
     private final PaymentGatewayService paymentGatewayService;
+    private final PostService postService;
     private final AwardRepository awardRepository;
 
     @PostMapping("/charge")
-    public String chargeCard(@RequestHeader(value = "token") String token, @RequestHeader(value = "id") long id) throws Exception {
-        Award award = awardRepository.findById(id).orElseThrow(() -> new RaditException("Award not found"));
-        Charge charge = new Charge();
+    public String chargeCard(@RequestHeader(value = "token") String token, @RequestHeader(value = "awardId") long awardId, @RequestHeader(value="postId") long postId) throws Exception {
+        Award award = awardRepository.findById(awardId).orElseThrow(() -> new RaditException("Award not found"));
+        Charge charge;
         try {
             charge = paymentGatewayService.chargeNewCard(token, award.getPrice());
-            System.out.println(charge.getAmount());
-            System.out.println(charge.getAmountCaptured());
-            System.out.println(charge.getOrder());
-            System.out.println(charge.getCalculatedStatementDescriptor());
-            System.out.println(charge.getApplication());
-            System.out.println(charge.getPaid());
-            System.out.println(charge.getStatus());
+            postService.addAward(postId, award);
         } catch (CardException e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.getUserMessage());
-            System.out.println(e.getCharge());
-            System.out.println(e.getParam());
-            System.out.println(e.getCode());
-            System.out.println(e.getStatusCode());
-            System.out.println(e.getStripeError());
+            throw new RaditException(e.getUserMessage());
         }
         return charge.toJson();
     }

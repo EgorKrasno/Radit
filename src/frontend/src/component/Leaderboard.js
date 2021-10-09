@@ -31,9 +31,9 @@ const Leaderboard = ({user}) => {
                 elements.push(
                     <div key={data[i].username} className="flex justify-between px-8 py-3">
                         <div className="flex items-center">
-                            <p className=" pr-3">{i + 1}</p>
+                            <p className="dark:text-gray-100 text-gray-900 pr-3">{i + 1}</p>
                             <Link to={`/user/${data[i].username}`}
-                                  className="flex text-sm text-gray-900 capitalize items-center">
+                                  className="flex text-sm dark:text-gray-100 text-gray-900 capitalize items-center">
                         <span
                             className="w-7 h-7 bg-green-500 shadow-md rounded-full relative ml-0.5 mr-2">
                             <div className="absolute top-3.5 left-3.5" style={{transform: 'translate(-50%, -50%)',}}>
@@ -44,7 +44,7 @@ const Leaderboard = ({user}) => {
                             </Link>
                         </div>
                         <div className="self-end flex items-center justify-center">
-                            <p className="text-gray-900 text-lg font-bold">{data[i].score}</p>
+                            <p className="dark:text-gray-100  text-gray-900 text-lg font-bold">{data[i].score}</p>
                             <GiChiliPepper className="text-red-500 ml-0.5" size={16}/>
                         </div>
                     </div>
@@ -57,9 +57,9 @@ const Leaderboard = ({user}) => {
     }
 
     return (
-        <div className="h-80 w-full bg-white rounded-xl shadow-md">
-            <h1 className="mx-8 pt-3 text-2xl font-bold">Top Spicy Bois</h1>
-            <div className="divide-y divide-gray-200">
+        <div className="h-80 w-full dark:bg-gray-800 bg-white rounded-xl shadow-md">
+            <h1 className="mx-8 pt-3 text-2xl font-bold dark:text-gray-100  text-gray-900">Top Spicy Bois</h1>
+            <div className="divide-y dark:divide-gray-700 divide-gray-200">
                 {!loading && createLeaderboard()}
             </div>
         </div>

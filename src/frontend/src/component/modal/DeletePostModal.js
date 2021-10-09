@@ -38,19 +38,19 @@ const DeletePostModal = ({isOpen, closeModal, handleDelete}) => {
                     leaveTo="opacity-0 scale-95"
                 >
                     <div
-                        className="inline-block max-w-lg px-12 py-6 overflow-hidden align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                        className="inline-block max-w-lg px-12 py-6 overflow-hidden align-middle transition-all transform dark:ring-1 dark:ring-gray-500 dark:bg-gray-800 bg-white shadow-xl rounded-2xl">
 
                         <BiTrash className="self-center w-full w-20 h-20 text-red-500 mb-3" />
                         <Dialog.Title
                             as="h3"
-                            className="text-3xl font-bold text-center text-gray-900 pb-3"
+                            className="text-3xl font-bold text-center dark:text-gray-100 text-gray-900 pb-3"
                         >
-                            Delete the spicy?
+                            Delete the Post?
                         </Dialog.Title>
                         <div className="flex justify-between space-x-6 mt-3">
                             <button
                                 onClick={closeModal}
-                                className="text-gray-600 shadow-md w-24 cursor-pointer rounded-full focus:outline-none text ring-2 ring-gray-300">
+                                className="dark:text-gray-500 text-gray-600 shadow-md w-24 cursor-pointer rounded-full focus:outline-none text ring-2 dark:ring-gray-500 ring-gray-300">
                                 Cancel
                             </button>
                             <button
@@ -58,7 +58,7 @@ const DeletePostModal = ({isOpen, closeModal, handleDelete}) => {
                                     handleDelete();
                                     closeModal();
                                 }}
-                                className="shadow-md w-24 cursor-pointer rounded-full text-white focus:outline-none text p-1.5 bg-gradient-to-r from-red-600 to-yellow-500">
+                                className="shadow-md w-24 cursor-pointer rounded-full dark:text-gray-100 text-white focus:outline-none p-1.5 bg-gradient-to-r from-red-600 to-yellow-500">
                                 Delete
                             </button>
                         </div>

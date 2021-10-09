@@ -11,7 +11,7 @@ export const sections = [
     {
         name: 'All',
         href: '/All',
-        icon: (small) => <AiFillHome className={`${!small && "mr-2"} text-gray-900`} size={small ? 18 : 22}/>
+        icon: (small) => <AiFillHome className={`${!small && "mr-2"} dark:text-white text-gray-900`} size={small ? 18 : 22}/>
     },
     {
         name: 'RareMemes',

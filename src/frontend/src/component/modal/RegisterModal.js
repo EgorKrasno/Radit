@@ -57,10 +57,10 @@ const RegisterModal = ({closeModal, isOpen, handleRegister}) => {
                         leaveTo="opacity-0 scale-95"
                     >
                         <div
-                            className="inline-block w-full max-w-lg px-8 py-6 overflow-hidden align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                            className="inline-block w-full max-w-lg px-8 py-6 overflow-hidden align-middle transition-all transform dark:bg-gray-900 bg-white shadow-xl rounded-2xl">
                             <Dialog.Title
                                 as="h3"
-                                className="text-3xl font-custom font-bold text-center text-gray-900 pb-3"
+                                className="text-3xl font-custom font-bold text-center dark:text-gray-100 text-gray-900 pb-3"
                             >
                                 Create an account
                             </Dialog.Title>
@@ -82,7 +82,7 @@ const RegisterModal = ({closeModal, isOpen, handleRegister}) => {
                                         }
                                     })}
                                     type="text"
-                                    className={`${errors.username && "ring-2 ring-red-500"} rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2.5 px-3 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent`}
+                                    className={`${errors.username && "ring-2 ring-red-500"} rounded-lg border-transparent flex-1 appearance-none w-full py-2.5 px-3 dark:bg-gray-800 bg-white dark:text-gray-100 text-gray-700 dark:placeholder-gray-500 placeholder-gray-400 shadow text-base focus:outline-none focus:ring-2 ring-1 dark:ring-gray-700 ring-gray-200 dark:focus:ring-yellow-500 focus:ring-yellow-500`}
                                     autoComplete="off"
                                     autoFocus
                                     placeholder="Username"
@@ -100,7 +100,7 @@ const RegisterModal = ({closeModal, isOpen, handleRegister}) => {
                                         },
                                     })}
                                     type="password"
-                                    className={`${errors.username && "ring-2 ring-red-500"} mt-6 rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2.5 px-3 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent`}
+                                    className={`${errors.username && "ring-2 ring-red-500"} mt-6  rounded-lg border-transparent flex-1 appearance-none w-full py-2.5 px-3 dark:bg-gray-800 bg-white dark:text-gray-100 text-gray-700 dark:placeholder-gray-500 placeholder-gray-400 shadow text-base focus:outline-none focus:ring-2 ring-1 dark:ring-gray-700 ring-gray-200 dark:focus:ring-yellow-500 focus:ring-yellow-500`}
                                     autoComplete="off"
                                     placeholder="Password"
                                 />
@@ -114,7 +114,7 @@ const RegisterModal = ({closeModal, isOpen, handleRegister}) => {
                                             value === password.current || "The passwords do not match"
                                     })}
                                     type="password"
-                                    className={`${errors.username && "ring-2 ring-red-500"} mt-6 rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2.5 px-3 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent`}
+                                    className={`${errors.username && "ring-2 ring-red-500"} mt-6  rounded-lg border-transparent flex-1 appearance-none w-full py-2.5 px-3 dark:bg-gray-800 bg-white dark:text-gray-100 text-gray-700 dark:placeholder-gray-500 placeholder-gray-400 shadow text-base focus:outline-none focus:ring-2 ring-1 dark:ring-gray-700 ring-gray-200 dark:focus:ring-yellow-500 focus:ring-yellow-500`}
                                     autoComplete="off"
                                     placeholder="Verify Password"
                                 />

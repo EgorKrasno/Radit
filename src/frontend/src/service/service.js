@@ -61,14 +61,13 @@ export const health = async () => {
     return await axios.get(`/api/user/health`, {headers: {Authorization: `Bearer ${getToken()}`}})
 }
 
-export const onToken = async (token, awardId) => {
-    const response = await axios.post("/api/payment/charge", "", {
+export const onToken = async (token, awardId, postId) => {
+    return await axios.post("/api/payment/charge", "", {
         headers: {
             Authorization: `Bearer ${getToken()}`,
             'token': token.id,
-            'id': awardId
+            'awardId': awardId,
+            'postId': postId
         }
     });
-    console.log(response.data);
-
 }

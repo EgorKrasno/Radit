@@ -7,6 +7,7 @@ import {
 import {useEffect, useState} from "react";
 import {getUserData} from "../service/service";
 import toast from "react-hot-toast";
+import ThemeSwitch from "./ThemeSwitch";
 
 
 const UserPage = () => {
@@ -77,12 +78,11 @@ const UserPage = () => {
                                 </div>
                             </div>
                         </div>
+                        <p className="text-center py-16 text-5xl font-bold text-red-500 animate-bounce">Under Construction</p>
+                        <p className="text-center py-16 text-5xl font-bold text-red-500 animate-spin">Go Away</p>
                     </>
                     : <p>Loading</p>}
-
-
             </div>
-
         </div>
     );
 }

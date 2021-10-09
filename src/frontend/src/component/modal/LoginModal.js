@@ -57,22 +57,22 @@ const LoginModal = ({closeModal, isOpen, handleLogin}) => {
                         leaveTo="opacity-0 scale-95"
                     >
                         <div
-                            className="inline-block w-full max-w-lg px-8 py-6 overflow-hidden align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                            className="inline-block w-full max-w-lg px-8 py-6 overflow-hidden align-middle transition-all transform dark:bg-gray-900 bg-white shadow-xl rounded-2xl">
                             <Dialog.Title
                                 as="h3"
-                                className="text-3xl font-custom font-bold text-center text-gray-900 pb-3"
+                                className="text-3xl font-custom font-bold text-center dark:text-gray-100 text-gray-900 pb-3"
                             >
                                 Login
                             </Dialog.Title>
                             {errorMessage !== "" && <p className="text-red-500 text-sm text-left">{errorMessage}</p>}
                             <form className="mt-2 space-y-6" onSubmit={submitHandler}>
                                 <input type="text"
-                                       className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
+                                       className="rounded-lg border-transparent flex-1 appearance-none w-full py-2.5 px-3 dark:bg-gray-800 bg-white dark:text-gray-100 text-gray-700 dark:placeholder-gray-500 placeholder-gray-400 shadow text-base focus:outline-none focus:ring-2 ring-1 dark:ring-gray-700 ring-gray-200 dark:focus:ring-yellow-500 focus:ring-yellow-500"
                                        placeholder="Username"
                                        onChange={e => setUsername(e.target.value)}
                                 />
                                 <input type="password"
-                                       className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
+                                       className=" rounded-lg border-transparent flex-1 appearance-none w-full py-2.5 px-3 dark:bg-gray-800 bg-white dark:text-gray-100 text-gray-700 dark:placeholder-gray-500 placeholder-gray-400 shadow text-base focus:outline-none focus:ring-2 ring-1 dark:ring-gray-700 ring-gray-200 dark:focus:ring-yellow-500 focus:ring-yellow-500"
                                        placeholder="Password"
                                        onChange={e => setPassword(e.target.value)}
                                 />

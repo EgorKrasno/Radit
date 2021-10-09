@@ -41,20 +41,20 @@ const Comments = ({post, addLocalComment, loggedIn, openLoginModal}) => {
 
     return (
         <>
-            <div className="mt-2 divide-y divide-gray-300 sm:max-h-96 sm:overflow-y-auto comments">
+            <div className="mt-2 divide-y dark:divide-gray-700 divide-gray-300 sm:max-h-96 sm:overflow-y-auto comments">
                 {(comments !== null && comments.length > 0) && comments.map((c) => <Comment key={c.id} data={c}/>)}
             </div>
-            <div className="border mx-3 mb-4 rounded-md flex flex-col focus-within:border-red-500">
+            <div className="border mx-3 mb-4 rounded-xl flex flex-col dark:border-gray-500 dark:focus-within:border-yellow-500 focus-within:border-yellow-500">
             <textarea
                 placeholder="Add a comment"
                 rows={3}
-                className="outline-none rounded-xl py-2 px-4"
+                className="outline-none dark:bg-gray-600 dark:text-gray-100 text-gray-900 bg-white rounded-t-xl py-2 px-4 "
                 value={comment}
                 onChange={e => setComment(e.target.value)}
             />
-                <div className="py-1.5 px-2 bg-gray-100 w-full flex justify-end items-center rounded-b-md ">
+                <div className="py-1.5 px-2 dark:bg-gray-700 bg-gray-100 w-full flex justify-end items-center rounded-b-xl ">
                     <button onClick={handleClick}
-                            className="cursor-pointer rounded-full text-white font-semibold text-sm py-1 px-5 bg-gradient-to-r from-red-600 to-yellow-500">
+                            className="cursor-pointer rounded-full dark:text-gray-100 text-white font-semibold text-sm py-1 px-5 bg-gradient-to-r from-red-600 to-yellow-500">
                         Comment
                     </button>
                 </div>

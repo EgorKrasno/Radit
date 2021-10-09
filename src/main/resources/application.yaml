@@ -13,17 +13,17 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         jdbc:
           time_zone: UTC
         dialect: org.hibernate.dialect.MySQL8Dialect
 
+service.mock: true
 STRIPE: ""
-AWSKEY: ""
-AWSSECRET: ""
 BUCKET: radit-bucket-dev
+S3: http://localhost:4566/
 
 jwt:
   secret: VerySecureLol

@@ -30,12 +30,6 @@ public class CommandLineStartupRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        sectionRepository.save(new Section(1L, "rarememes"));
-        sectionRepository.save(new Section(2L, "beans"));
-        sectionRepository.save(new Section(3L, "programming"));
-        sectionRepository.save(new Section(4L, "random"));
-        sectionRepository.save(new Section(5L, "zuck"));
-
         awardRepository.save(new Award(1L, 99, "Spicy"));
         awardRepository.save(new Award(2L, 99, "Holy Grail"));
         awardRepository.save(new Award(3L, 99, "Trash"));
@@ -45,6 +39,11 @@ public class CommandLineStartupRunner implements CommandLineRunner {
         awardRepository.save(new Award(7L, 249, "Fake Money"));
         awardRepository.save(new Award(8L, 99, "Snek"));
 
+        sectionRepository.save(new Section(1L, "rarememes"));
+        sectionRepository.save(new Section(2L, "beans"));
+        sectionRepository.save(new Section(3L, "programming"));
+        sectionRepository.save(new Section(4L, "random"));
+        sectionRepository.save(new Section(5L, "zuck"));
 
         if (userRepository.findByUsername("admin").isPresent()) {
             return;

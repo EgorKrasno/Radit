@@ -39,7 +39,6 @@ const Board = ({loggedIn, setIsLoginModalOpen, user}) => {
 
     const renderPosts = () => {
 
-        if (posts.length > 0) {
             return (posts.map((post, i) => {
                     return <div key={post.id} className="w-full" ref={posts.length === i + 1 ? lastElementRef : null}>
                         <Post
@@ -50,9 +49,7 @@ const Board = ({loggedIn, setIsLoginModalOpen, user}) => {
                     </div>
                 })
             );
-        } else {
-            return <p className="font-bold text-xl">No Posts yet</p>
-        }
+
 
     }
     return (

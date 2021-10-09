@@ -2,11 +2,12 @@ import {
     FiChevronDown, GiChiliPepper, GiNewShoot,
     GoFlame,
 } from "react-icons/all";
-import SettingsMenu from "./SettingsMenu";
+import SettingsMenu from "./menu/SettingsMenu";
 import {Popover, RadioGroup, Transition} from '@headlessui/react'
 import {Fragment, useEffect, useState} from 'react'
 import {Link, useHistory, useLocation} from "react-router-dom";
 import {sections} from "../data/Data";
+import ThemeSwitch from "./ThemeSwitch";
 
 const Navbar = ({
                     loggedIn,
@@ -30,7 +31,7 @@ const Navbar = ({
     }, [location])
 
     return (
-        <div className="flex w-screen bg-white shadow-sm items-center justify-between h-14 px-2 lg:px-8 z-20">
+        <div className="flex w-screen dark:bg-gray-800 bg-white shadow-sm items-center justify-between h-14 px-2 lg:px-4 z-20">
             <div className="flex">
                 <Link
                     to="/"
@@ -40,7 +41,7 @@ const Navbar = ({
                 </Link>
 
 
-                <div className="w-full ml-3 lg:ml-12 border border-gray-200 rounded-lg">
+                <div className="w-full ml-3 lg:ml-12 border dark:border-gray-600 border-gray-200 rounded-lg">
                     <Popover className="relative">
                         <>
                             <Popover.Button
@@ -48,9 +49,9 @@ const Navbar = ({
                                 <div className="flex items-center w-12 md:w-56 justify-between">
                                     <div className="flex items-center">
                                         {section !== null ? section.icon() : sections[0].icon()}
-                                        <p className="hidden md:inline-block text-gray-900 text-sm">{section !== null ? section.name : sections[0].name}</p>
+                                        <p className="hidden md:inline-block dark:text-gray-100 text-gray-900 text-sm">{section !== null ? section.name : sections[0].name}</p>
                                     </div>
-                                    <FiChevronDown size={18} className="text-gray-900"/>
+                                    <FiChevronDown size={18} className="dark:text-gray-100 text-gray-900"/>
                                 </div>
                             </Popover.Button>
                             <Transition
@@ -66,8 +67,8 @@ const Navbar = ({
                                     className="absolute z-10 w-40 md:w-full max-w-sm mt-3 transform -translate-x-1/2 left-1/2">
                                     {({close}) => (
                                         <div
-                                            className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                                            <div className="relative grid gap-8 bg-white p-3 md:p-7">
+                                            className="overflow-hidden rounded-lg shadow-lg ring-1 dark:ring-gray-700 ring-black ring-opacity-5 ">
+                                            <div className="relative grid gap-8 dark:bg-gray-800 bg-white p-3 md:p-7">
                                                 {sections.map((item) => (
                                                     <button
                                                         key={item.name}
@@ -84,14 +85,14 @@ const Navbar = ({
                                                             close();
                                                         }}
 
-                                                        className="flex items-center py-1 px-1 md:px-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
+                                                        className="flex items-center py-1 px-1 md:px-2 -m-3 transition duration-150 ease-in-out rounded-lg dark:hover:bg-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                                                     >
                                                         <div
-                                                            className="flex items-center justify-center flex-shrink-0 w-10 h-10 text-white md:h-8">
+                                                            className="flex items-center justify-center flex-shrink-0 w-10 h-10 md:h-8">
                                                             <item.icon/>
                                                         </div>
                                                         <div className="md:ml-2">
-                                                            <p className="text-md font-base text-gray-900">
+                                                            <p className="text-md font-base dark:text-gray-100 text-gray-900">
                                                                 {item.name}
                                                             </p>
                                                         </div>
@@ -118,7 +119,7 @@ const Navbar = ({
                         <RadioGroup.Option value="voteCount">
                             {({checked}) => (
                                 <div
-                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} items-center justify-center shadow flex items-center cursor-pointer rounded-full text-white font-bold w-9 sm:w-24 h-9`}>
+                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500 dark:text-gray-50' : 'dark:text-white text-gray-800 border-2 border-yellow-500'} items-center justify-center shadow flex items-center cursor-pointer rounded-full text-white font-bold w-9 sm:w-24 h-9`}>
                                     <GoFlame className="sm:mr-1" size={20}/>
                                     <p className="font-custom text-lg hidden sm:inline-block">Hot</p>
                                 </div>
@@ -127,7 +128,7 @@ const Navbar = ({
                         <RadioGroup.Option value="createdDate">
                             {({checked}) => (
                                 <div
-                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500' : 'text-gray-800 border-2 border-yellow-500'} items-center justify-center shadow flex items-center cursor-pointer rounded-full text-white font-bold  w-9 sm:w-24 h-9`}>
+                                    className={`${checked ? 'bg-gradient-to-r from-red-600 to-yellow-500 dark:text-gray-50' : 'dark:text-white text-gray-900 border-2 border-yellow-500'} items-center justify-center shadow flex items-center cursor-pointer rounded-full text-white font-bold  w-9 sm:w-24 h-9`}>
                                     <GiNewShoot className="sm:mr-1"/>
                                     <p className='font-bold text-lg hidden sm:inline-block'>New</p>
                                 </div>
@@ -140,22 +141,23 @@ const Navbar = ({
             </div>
             <div className="space-x-2">
                 {loggedIn ?
-                    <div className="flex  items-center">
+                    <div className="flex items-center">
+                        <ThemeSwitch/>
                         <button onClick={() => setIsPostModalOpen(true)}
-                                className="sm:mx-5 mx-2 shadow text-lg cursor-pointer rounded-full text-white font-bold py-1 px-4 bg-gradient-to-r from-red-600 to-yellow-500">
-                            Post <span className="hidden sm:inline-block">🌶️</span>
+                                className="sm:mx-3 mx-2 shadow text-lg cursor-pointer rounded-full dark:text-gray-100 text-white font-bold py-1 px-4 bg-gradient-to-r from-red-600 to-yellow-500">
+                            Create a post
                         </button>
                         <SettingsMenu userData={userData} handleLogout={logout}/>
                     </div>
                     :
                     <>
                         <button onClick={setIsRegisterModalOpen}
-                                className="cursor-pointer rounded-full text-gray-900 font-semibold py-1.5 px-4 border-2 border-red-500">
+                                className="cursor-pointer rounded-full dark:text-gray-100 text-gray-900 font-semibold py-1.5 px-4 border-2 border-yellow-500">
                             Register
                         </button>
 
                         <button onClick={setIsLoginModalOpen}
-                                className="cursor-pointer rounded-full text-gray-900 font-semibold py-1.5 px-4 border-2 border-red-500">
+                                className="cursor-pointer rounded-full dark:text-gray-100 text-gray-900 font-semibold py-1.5 px-4 border-2 border-yellow-500">
                             Login
                         </button>
                     </>
