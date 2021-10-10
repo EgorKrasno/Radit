@@ -1,10 +1,11 @@
 import {
-    AiOutlineComment, AiOutlineTrophy, BsTrophy,
+    AiOutlineComment, AiOutlineTrophy,
     FaArrowDown,
-    FaArrowUp, GiCheckedShield, GiChiliPepper,
+    FaArrowUp, GiCheckedShield,
 } from "react-icons/all";
+import YouTube from 'react-youtube';
 import {deletePost, vote} from "../service/service";
-import {useEffect, useState} from "react";
+import { useState} from "react";
 import Comments from "./Comments";
 import {postModalSections} from "../data/Data";
 import {Link, useHistory, useLocation} from "react-router-dom";
@@ -24,7 +25,6 @@ const Post = ({post, openLoginModal, loggedIn, user}) => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isAwardModalOpen, setIsAwardModalOpen] = useState(false);
     let history = useHistory();
-    let location = useLocation();
 
     const section = postModalSections.find(s => s.name.toLowerCase() === post.section)
 
@@ -84,7 +84,7 @@ const Post = ({post, openLoginModal, loggedIn, user}) => {
 
     return (
         <>
-            <div className="flex dark:bg-gray-800 bg-white sm:rounded-xl shadow-md flex flex-col w-full">
+            <div className="flex dark:bg-gray-800 bg-white rounded-tl-lg rounded-bl-lg sm:rounded-xl shadow-md flex flex-col w-full">
                 <div className="flex flex-1">
                     <div
                         className={`${showComments ? "rounded-tl-xl rounded-br-xl" : "rounded-l-xl"} flex flex-col justify-center items-center px-2.5 space-y-0.5 dark:bg-gray-700 bg-gray-100`}>
@@ -116,8 +116,12 @@ const Post = ({post, openLoginModal, loggedIn, user}) => {
                                 {user.username === post.userName && <PostMenu handleDelete={openDeleteModal}/>}
                             </div>
                         </div>
+
+                        {/* Title */}
                         <h1 className="text-left dark:text-gray-100 text-gray-900 text-2xl mb-2 sm:mb-3 font-bold">{post.title[0].toUpperCase() + post.title.substring(1)}</h1>
-                        {post.imageUrl &&
+
+                        {/* Image */}
+                        {(post.imageUrl && !post.content.includes("youtube")) &&
                         <div className="flex justify-center mb-2 mt-3">
                             {window.screen.width > 640 ?
                                 <a href={post.imageUrl} target="_blank" rel="noopener noreferrer">
@@ -126,7 +130,15 @@ const Post = ({post, openLoginModal, loggedIn, user}) => {
                                 <img src={post.imageUrl} alt=""/>
                             }
                         </div>}
-                        {post.content && <p className="dark:text-gray-100 text-gray-900">{post.content}</p>}
+
+                        {/* Youtube */}
+                        {post.content.includes("youtube") &&
+                        <YouTube className="flex justify-center mx-auto w-full" videoId={post.content.split('=')[1]}/>
+                        }
+
+
+                        {/* Text */}
+                        {(post.content && !post.content.includes("youtube")) && <p className="dark:text-gray-100 text-gray-900">{post.content}</p>}
 
                         {/*Bottom Bar*/}
                         <div className="flex justify-between items-center pt-3 sm:pt-4">

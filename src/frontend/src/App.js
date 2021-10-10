@@ -128,6 +128,7 @@ const App = () => {
                     <Route exact path="/j/:sectionName" key={s.name}>
                         <Home
                             user={userData}
+                            setIsPostModalOpen={() => setIsPostModalOpen(true)}
                             loggedIn={loggedIn}
                             setIsLoginModalOpen={setIsLoginModalOpen}/>
                     </Route>

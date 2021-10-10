@@ -42,7 +42,7 @@ public class AmazonConfig {
 
         return AmazonS3Client.builder()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:4566", ""))
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsSecret, awsAccessKey)))
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .build();
     }
 }

@@ -22,6 +22,8 @@ spring:
 
 service.mock: true
 STRIPE: ""
+AWSKEY: ""
+AWSSECRET: ""
 BUCKET: radit-bucket-dev
 S3: http://localhost:4566/
 

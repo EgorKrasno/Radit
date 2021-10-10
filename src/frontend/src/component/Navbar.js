@@ -1,4 +1,5 @@
 import {
+    AiOutlinePlus,
     FiChevronDown, GiChiliPepper, GiNewShoot,
     GoFlame,
 } from "react-icons/all";
@@ -143,10 +144,10 @@ const Navbar = ({
                 {loggedIn ?
                     <div className="flex items-center">
                         <ThemeSwitch/>
-                        <button onClick={() => setIsPostModalOpen(true)}
-                                className="sm:mx-3 mx-2 shadow text-lg cursor-pointer rounded-full dark:text-gray-100 text-white font-bold py-1 px-4 bg-gradient-to-r from-red-600 to-yellow-500">
-                            Create a post
-                        </button>
+                        <div onClick={() => setIsPostModalOpen(true)}
+                                className="text-yellow-500 h-8 w-8 border-2 border-yellow-500 rounded-full flex items-center justify-center cursor-pointer mx-3 hover:border-red-500 hover:text-red-500">
+                            <AiOutlinePlus className="h-6 w-6"/>
+                        </div>
                         <SettingsMenu userData={userData} handleLogout={logout}/>
                     </div>
                     :
