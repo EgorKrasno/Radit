@@ -5,9 +5,9 @@ import {
     IoIosImages,
 } from "react-icons/all";
 import {useEffect, useState} from "react";
-import {getUserData} from "../service/service";
+import {getUserData} from "../../service/service";
 import toast from "react-hot-toast";
-import ThemeSwitch from "./ThemeSwitch";
+import ThemeSwitch from "../ThemeSwitch";
 
 
 const UserPage = () => {

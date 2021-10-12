@@ -1,5 +1,5 @@
 import Board from "./Board";
-import Leaderboard from "./Leaderboard";
+import Leaderboard from "../Leaderboard";
 
 const Home = ({loggedIn, setIsLoginModalOpen, user, setIsPostModalOpen}) => {
 

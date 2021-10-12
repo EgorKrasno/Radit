@@ -10,8 +10,10 @@ import com.egor.radit.repository.CommentRepository;
 import com.egor.radit.repository.PostRepository;
 import com.egor.radit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +25,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final CommentMapper commentMapper;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     public void save(Authentication auth, CommentDto commentDto) throws RaditException {
         Post post = postRepository.findById(commentDto.getPostId())
@@ -37,8 +40,15 @@ public class CommentService {
         post.setCommentCount(post.getCommentCount() + 1);
         postRepository.save(post);
 
-        user.setCommentCount(user.getCommentCount()+1);
+        user.setCommentCount(user.getCommentCount() + 1);
         userRepository.save(user);
+
+        if (post.getUser() != user) {
+            simpMessagingTemplate.convertAndSendToUser(
+                    post.getUser().getUsername(), "/reply",
+                    String.format("%s commented on your post", StringUtils.capitalize(user.getUsername())));
+        }
+
     }
 
     public List<CommentDto> getAllCommentsForPost(Long postId) throws RaditException {

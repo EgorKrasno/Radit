@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,7 @@ public class PostService {
     private final SectionRepository sectionRepository;
     private final FileStore fileStore;
     private final PostMapper postMapper;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Value("${BUCKET}")
     private String bucket;
@@ -124,6 +126,10 @@ public class PostService {
 
     public void addAward(long postId, Award award) throws RaditException {
         Post post = postRepository.findById(postId).orElseThrow(() -> new RaditException("Post not found"));
+
+        simpMessagingTemplate.convertAndSendToUser(
+                post.getUser().getUsername(), "/reply",
+                "Your spicy post received an award!");
 
         List<Award> awardsList = post.getAwards();
         awardsList.add(award);

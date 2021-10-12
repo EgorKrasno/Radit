@@ -17,7 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -27,6 +29,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//
+//        if (headerNames != null) {
+//            while (headerNames.hasMoreElements()) {
+//                System.out.println("Header: " + request.getHeader(headerNames.nextElement()));
+//            }
+//        }
+
         if(request.getMethod().equalsIgnoreCase(SecurityConstant.OPTIONS_HTTP_METHOD)){
             response.setStatus(HttpStatus.OK.value());
         } else {

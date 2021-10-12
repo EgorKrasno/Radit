@@ -1,7 +1,7 @@
-import Post from "./Post";
+import Post from "../Post";
 import {useEffect, useState, useRef, useCallback} from "react";
 import {useLocation} from "react-router-dom";
-import useInfiniteScroll from "../hook/useInfiniteScroll";
+import useInfiniteScroll from "../../hook/useInfiniteScroll";
 
 const Board = ({loggedIn, setIsLoginModalOpen, user}) => {
     let location = useLocation();

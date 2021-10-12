@@ -9,6 +9,8 @@ import com.egor.radit.repository.PostRepository;
 import com.egor.radit.repository.UserRepository;
 import com.egor.radit.repository.VoteRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ public class VoteService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final VoteRepository voteRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     public void vote(Authentication auth, VoteDto voteDto) throws RaditException {
         User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new RaditException("User not found"));
@@ -29,6 +32,11 @@ public class VoteService {
         User poster = userRepository.findByUsername(post.getUser().getUsername()).orElseThrow(() -> new RaditException("Original poster not found"));
 
         Optional<Vote> vote = voteRepository.findByPostAndUser(post, user);
+
+        if(voteDto.getDirection() > 0 && user != poster){
+            simpMessagingTemplate.convertAndSendToUser(
+                    poster.getUsername(), "/reply", "Someone upvoted your Post!");
+        }
 
         if (vote.isEmpty()) {
             //update posts vote count

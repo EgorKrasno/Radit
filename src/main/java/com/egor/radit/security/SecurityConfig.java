@@ -2,8 +2,6 @@ package com.egor.radit.security;
 
 import com.egor.radit.constant.SecurityConstant;
 import com.egor.radit.filter.JwtAuthFilter;
-import com.egor.radit.service.AuthenticationDeniedHandler;
-import com.egor.radit.service.AuthorizationDeniedHandler;
 import com.egor.radit.service.MyUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

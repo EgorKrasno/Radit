@@ -1,14 +1,14 @@
 import {
     AiOutlinePlus,
     FiChevronDown, GiChiliPepper, GiNewShoot,
-    GoFlame,
+    GoFlame, GrUserAdmin, RiAdminLine,
 } from "react-icons/all";
-import SettingsMenu from "./menu/SettingsMenu";
+import SettingsMenu from "./SettingsMenu";
 import {Popover, RadioGroup, Transition} from '@headlessui/react'
 import {Fragment, useEffect, useState} from 'react'
 import {Link, useHistory, useLocation} from "react-router-dom";
-import {sections} from "../data/Data";
-import ThemeSwitch from "./ThemeSwitch";
+import {sections} from "../../data/Data";
+import ThemeSwitch from "../ThemeSwitch";
 
 const Navbar = ({
                     loggedIn,
@@ -150,6 +150,7 @@ const Navbar = ({
                         </div>
                         <SettingsMenu userData={userData} handleLogout={logout}/>
                     </div>
+
                     :
                     <>
                         <button onClick={setIsRegisterModalOpen}

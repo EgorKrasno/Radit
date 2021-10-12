@@ -1,22 +1,30 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {health, login, register} from "./service/service";
 import PostModal from "./component/modal/PostModal";
 import LoginModal from "./component/modal/LoginModal";
 import RegisterModal from "./component/modal/RegisterModal";
-import Navbar from "./component/Navbar";
-import {Toaster} from "react-hot-toast";
+import Navbar from "./component/menu/Navbar";
+import toast, {Toaster} from "react-hot-toast";
 import {Redirect, Route, Switch, useHistory} from "react-router-dom";
-import Home from "./component/Home";
+import Home from "./component/page/Home";
 import {sections} from "./data/Data";
-import UserPage from "./component/UserPage";
+import UserPage from "./component/page/UserPage";
+import SockJsClient from 'react-stomp';
+import Admin from "./component/page/Admin";
+import {GiOctopus} from "react-icons/all";
+import {useWindowSize} from "react-use";
+import Confetti from 'react-confetti'
 
 const App = () => {
+    const {width, height} = useWindowSize()
+    const clientRef = useRef(null);
     let history = useHistory();
     const [loggedIn, setLoggedIn] = useState(localStorage.getItem("token") !== null);
-    const [userData, setUserData] = useState({username: "", roles: []});
+    const [userData, setUserData] = useState({username: "", roleList: []});
     const [isPostModalOpen, setIsPostModalOpen] = useState(false)
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false)
+    const [confetti, setConfetti] = useState(false);
 
 
     useEffect(() => {
@@ -86,54 +94,105 @@ const App = () => {
         setUserData({username: "", roles: []});
     }
 
+    const confettiCannon = () => {
+
+    }
+
     return (
-        <div className="flex flex-col h-screen">
-            <Navbar loggedIn={loggedIn}
-                    logout={logout}
-                    userData={userData}
-                    setIsPostModalOpen={() => setIsPostModalOpen(true)}
-                    setIsRegisterModalOpen={() => setIsRegisterModalOpen(true)}
-                    setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>
+        <div className="relative">
+            {(loggedIn && userData.roleList.includes("ROLE_SUPER_ADMIN")) &&
+            <div onClick={() => history.push('/admin')}
+                 className="z-50 absolute bottom-2 right-6 text-red-700 border-red-700 h-24 w-24 border-4  rounded-full flex items-center justify-center cursor-pointer">
+                <GiOctopus className="h-16 w-16"/>
+            </div>}
+
+            <div className="flex flex-col h-screen">
+                <Navbar loggedIn={loggedIn}
+                        logout={logout}
+                        userData={userData}
+                        setIsPostModalOpen={() => setIsPostModalOpen(true)}
+                        setIsRegisterModalOpen={() => setIsRegisterModalOpen(true)}
+                        setIsLoginModalOpen={() => setIsLoginModalOpen(true)}/>
 
 
-            <PostModal isOpen={isPostModalOpen}
-                       closeModal={() => setIsPostModalOpen(false)}/>
-            <LoginModal isOpen={isLoginModalOpen}
-                        handleLogin={handleLogin}
-                        closeModal={() => setIsLoginModalOpen(false)}/>
-            <RegisterModal isOpen={isRegisterModalOpen}
-                           handleRegister={handleRegister}
-                           closeModal={() => setIsRegisterModalOpen(false)}/>
+                <PostModal isOpen={isPostModalOpen}
+                           closeModal={() => setIsPostModalOpen(false)}/>
+                <LoginModal isOpen={isLoginModalOpen}
+                            handleLogin={handleLogin}
+                            closeModal={() => setIsLoginModalOpen(false)}/>
+                <RegisterModal isOpen={isRegisterModalOpen}
+                               handleRegister={handleRegister}
+                               closeModal={() => setIsRegisterModalOpen(false)}/>
 
-            <Toaster
-                toastOptions={{
-                    success: {
-                        style: {
-                            background: '#E0F5E9',
+                <Toaster
+                    toastOptions={{
+                        success: {
+                            style: {
+                                background: '#E0F5E9',
+                            },
                         },
-                    },
-                    error: {
-                        style: {
-                            background: '#FADEDE',
+                        error: {
+                            style: {
+                                background: '#FADEDE',
+                            },
                         },
-                    },
-                }}
-            />
-            <Switch>
-                <Route exact path="/">
-                    <Redirect to="/j/All?sortBy=voteCount"/>
-                </Route>
-                <Route path="/user/:username" component={UserPage}/>
-                {sections.map(s =>
-                    <Route exact path="/j/:sectionName" key={s.name}>
-                        <Home
-                            user={userData}
-                            setIsPostModalOpen={() => setIsPostModalOpen(true)}
-                            loggedIn={loggedIn}
-                            setIsLoginModalOpen={setIsLoginModalOpen}/>
+                    }}
+                />
+                <Switch>
+                    <Route exact path="/">
+                        <Redirect to="/j/All?sortBy=voteCount"/>
                     </Route>
-                )}
-            </Switch>
+                    <Route path="/admin">
+                        {(loggedIn && userData.roleList.includes("ROLE_SUPER_ADMIN")) ?
+                            < Admin client={clientRef}/> : <Redirect to="/"/>
+                        }
+                    </Route>
+                    <Route path="/user/:username" component={UserPage}/>
+                    {sections.map(s =>
+                        <Route exact path="/j/:sectionName" key={s.name}>
+                            <Home
+                                user={userData}
+                                setIsPostModalOpen={() => setIsPostModalOpen(true)}
+                                loggedIn={loggedIn}
+                                setIsLoginModalOpen={setIsLoginModalOpen}/>
+                        </Route>
+                    )}
+                </Switch>
+            </div>
+
+            {userData.username !== '' &&
+
+            <SockJsClient url='/ws/'
+                          headers={{
+                              Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+                          }}
+                          topics={[`/user/${userData.username}/reply`, '/topic/all']}
+                          onConnect={() => {
+                              console.log("WebSocket Connected");
+                          }}
+                          onDisconnect={() => {
+                              console.log("WebSocket Disconnected");
+                          }}
+                          onMessage={(msg) => {
+                              if (msg === 'dopamine') {
+                                  setConfetti(!confetti);
+                                  return;
+                              }
+                              toast(msg, {
+                                  style: {
+                                      background: '#E0F5E9',
+                                  },
+                                  duration: 6000,
+                                  icon: "🎉",
+                                  position: "bottom-left",
+                              })
+                          }}
+                          ref={clientRef}/>}
+
+            {confetti && <Confetti
+                width={width}
+                height={height}
+            />}
         </div>
     );
 }
