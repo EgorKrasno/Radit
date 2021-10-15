@@ -23,9 +23,9 @@ public class MessagingController {
 
     @MessageMapping("/sendPrivateMessage")
     public void sendPrivateMessage(Principal principal, @Payload WsMessage wsMessage) throws RaditException {
-        if (!isAdmin(principal)) return;
+
         simpMessagingTemplate.convertAndSendToUser(
-                wsMessage.getRecipient(), "/reply", wsMessage.getMessage());
+                wsMessage.getRecipient(), "/reply", wsMessage);
     }
 
     @MessageMapping("/blastAll")

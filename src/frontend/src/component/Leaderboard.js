@@ -34,12 +34,10 @@ const Leaderboard = ({user}) => {
                             <p className="dark:text-gray-100 text-gray-900 pr-3">{i + 1}</p>
                             <Link to={`/user/${data[i].username}`}
                                   className="flex text-sm dark:text-gray-100 text-gray-900 capitalize items-center">
-                        <span
-                            className="w-7 h-7 bg-green-500 shadow-md rounded-full relative ml-0.5 mr-2">
-                            <div className="absolute top-3.5 left-3.5" style={{transform: 'translate(-50%, -50%)',}}>
+                        <div
+                            className="w-7 h-7 bg-green-500 shadow-md rounded-full flex items-center justify-center ml-0.5 mr-2">
                                 <GiChicken className="text-white" size={22}/>
-                            </div>
-                        </span>
+                        </div>
                                 <p>{data[i].username}</p>
                             </Link>
                         </div>

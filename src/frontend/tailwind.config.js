@@ -6,6 +6,12 @@ module.exports = {
             custom: ['flood-std', 'sans-serif']
         },
         extend: {
+            width: {
+                '550': '550px',
+            },
+            height: {
+                '450': '450px',
+            },
             screens: {
                 'tablet': '1160px',
             },

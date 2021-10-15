@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WsMessage {
+    private String type;
     private String recipient;
     private String message;
 }

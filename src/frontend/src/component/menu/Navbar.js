@@ -1,7 +1,7 @@
 import {
-    AiOutlinePlus,
+    AiOutlinePlus, BsChatDots,
     FiChevronDown, GiChiliPepper, GiNewShoot,
-    GoFlame, GrUserAdmin, RiAdminLine,
+    GoFlame, GrUserAdmin, IoChatbubbleEllipsesSharp, RiAdminLine,
 } from "react-icons/all";
 import SettingsMenu from "./SettingsMenu";
 import {Popover, RadioGroup, Transition} from '@headlessui/react'
@@ -32,7 +32,7 @@ const Navbar = ({
     }, [location])
 
     return (
-        <div className="flex w-screen dark:bg-gray-800 bg-white shadow-sm items-center justify-between h-14 px-2 lg:px-4 z-20">
+        <div className="flex w-screen dark:border-gray-700 dark:border-opacity-50 border-transparent border-b dark:bg-gray-800 bg-white shadow-sm items-center justify-between h-14 px-2 lg:px-4 z-20">
             <div className="flex">
                 <Link
                     to="/"
@@ -142,11 +142,15 @@ const Navbar = ({
             </div>
             <div className="space-x-2">
                 {loggedIn ?
-                    <div className="flex items-center">
+                    <div className="flex items-center space-x-3">
                         <ThemeSwitch/>
                         <div onClick={() => setIsPostModalOpen(true)}
-                                className="text-yellow-500 h-8 w-8 border-2 border-yellow-500 rounded-full flex items-center justify-center cursor-pointer mx-3 hover:border-red-500 hover:text-red-500">
-                            <AiOutlinePlus className="h-6 w-6"/>
+                             className="text-yellow-500 flex items-center justify-center cursor-pointer hover:border-red-500 hover:text-red-500">
+                            <BsChatDots className="h-7 w-7 mb-0.5"/>
+                        </div>
+                        <div onClick={() => setIsPostModalOpen(true)}
+                                className="text-yellow-500 flex items-center justify-center cursor-pointer hover:border-red-500 hover:text-red-500">
+                            <AiOutlinePlus className="h-8 w-8"/>
                         </div>
                         <SettingsMenu userData={userData} handleLogout={logout}/>
                     </div>

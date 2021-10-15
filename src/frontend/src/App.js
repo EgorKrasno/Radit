@@ -4,7 +4,7 @@ import PostModal from "./component/modal/PostModal";
 import LoginModal from "./component/modal/LoginModal";
 import RegisterModal from "./component/modal/RegisterModal";
 import Navbar from "./component/menu/Navbar";
-import toast, {Toaster} from "react-hot-toast";
+import toast from "react-hot-toast";
 import {Redirect, Route, Switch, useHistory} from "react-router-dom";
 import Home from "./component/page/Home";
 import {sections} from "./data/Data";
@@ -14,6 +14,8 @@ import Admin from "./component/page/Admin";
 import {GiOctopus} from "react-icons/all";
 import {useWindowSize} from "react-use";
 import Confetti from 'react-confetti'
+import Toast from "./component/Toaster";
+import Chat from "./component/Chat";
 
 const App = () => {
     const {width, height} = useWindowSize()
@@ -25,6 +27,7 @@ const App = () => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false)
     const [confetti, setConfetti] = useState(false);
+    const [messages, setMessages] = useState([]);
 
 
     useEffect(() => {
@@ -100,11 +103,11 @@ const App = () => {
 
     return (
         <div className="relative">
-            {(loggedIn && userData.roleList.includes("ROLE_SUPER_ADMIN")) &&
-            <div onClick={() => history.push('/admin')}
-                 className="z-50 absolute bottom-2 right-6 text-red-700 border-red-700 h-24 w-24 border-4  rounded-full flex items-center justify-center cursor-pointer">
-                <GiOctopus className="h-16 w-16"/>
-            </div>}
+            {/*{(loggedIn && userData.roleList.includes("ROLE_SUPER_ADMIN")) &&*/}
+            {/*<div onClick={() => history.push('/admin')}*/}
+            {/*     className="z-50 absolute bottom-2 right-6 text-red-700 border-red-700 h-24 w-24 border-4  rounded-full flex items-center justify-center cursor-pointer">*/}
+            {/*    <GiOctopus className="h-16 w-16"/>*/}
+            {/*</div>}*/}
 
             <div className="flex flex-col h-screen">
                 <Navbar loggedIn={loggedIn}
@@ -124,20 +127,8 @@ const App = () => {
                                handleRegister={handleRegister}
                                closeModal={() => setIsRegisterModalOpen(false)}/>
 
-                <Toaster
-                    toastOptions={{
-                        success: {
-                            style: {
-                                background: '#E0F5E9',
-                            },
-                        },
-                        error: {
-                            style: {
-                                background: '#FADEDE',
-                            },
-                        },
-                    }}
-                />
+                <Toast/>
+
                 <Switch>
                     <Route exact path="/">
                         <Redirect to="/j/All?sortBy=voteCount"/>
@@ -161,7 +152,6 @@ const App = () => {
             </div>
 
             {userData.username !== '' &&
-
             <SockJsClient url='/ws/'
                           headers={{
                               Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
@@ -174,18 +164,24 @@ const App = () => {
                               console.log("WebSocket Disconnected");
                           }}
                           onMessage={(msg) => {
-                              if (msg === 'dopamine') {
-                                  setConfetti(!confetti);
-                                  return;
+                              if (msg.type === 'message') {
+                                  setMessages((prev) => {
+                                      setMessages([...prev, msg]);
+                                  })
                               }
-                              toast(msg, {
-                                  style: {
-                                      background: '#E0F5E9',
-                                  },
-                                  duration: 6000,
-                                  icon: "🎉",
-                                  position: "bottom-left",
-                              })
+                          //     if (msg.type['confetti']) {
+                          //         setConfetti(!confetti);
+                          //         return;
+                          //     }
+                          //
+                          //     toast(msg.type['toast'], {
+                          //         style: {
+                          //             background: '#E0F5E9',
+                          //         },
+                          //         duration: 6000,
+                          //         icon: "🎉",
+                          //         position: "bottom-left",
+                          //     })
                           }}
                           ref={clientRef}/>}
 
@@ -193,6 +189,7 @@ const App = () => {
                 width={width}
                 height={height}
             />}
+            <Chat client={clientRef} messages={messages} setMessages={(m)=>setMessages(m)} user={userData.username}/>
         </div>
     );
 }

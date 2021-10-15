@@ -49,12 +49,10 @@ const Board = ({loggedIn, setIsLoginModalOpen, user}) => {
                     </div>
                 })
             );
-
-
     }
     return (
         <>
-            <div className="mt-2 sm:mt-6" ref={myRef}></div>
+            <div className="mt-2 sm:mt-6" ref={myRef}/>
             <div className="flex flex-col justify-center items-center space-y-2 sm:space-y-6 pb-2 sm:pb-6">
                 {renderPosts()}
             </div>
