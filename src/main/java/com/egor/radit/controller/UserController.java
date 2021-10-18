@@ -20,6 +20,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -64,24 +66,17 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    @GetMapping("/testuser")
-    public ResponseEntity<String> testUser(Authentication authentication) {
-        return new ResponseEntity<>(authentication.getName(), HttpStatus.I_AM_A_TEAPOT);
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
-    @GetMapping("/testadmin")
-    public ResponseEntity<String> testAdmin(Authentication authentication) {
-        return new ResponseEntity<>(authentication.getName(), HttpStatus.I_AM_A_TEAPOT);
-    }
-
     @GetMapping("/user/health")
     public ResponseEntity<?> health(Authentication auth) {
-        if (userService.health(auth)) return new ResponseEntity<>(OK);
+        if (auth != null && userService.health(auth)) return new ResponseEntity<>(OK);
         return new ResponseEntity<>(BAD_REQUEST);
     }
 
+    @GetMapping("/user/all")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public ResponseEntity<List<String>> getAllUsers() {
+        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+    }
 
 //    @PreAuthorize("permitAll()")
     @GetMapping("/user/data/{username}")

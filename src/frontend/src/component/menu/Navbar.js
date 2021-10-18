@@ -17,6 +17,8 @@ const Navbar = ({
                     setIsRegisterModalOpen,
                     setIsLoginModalOpen,
                     userData,
+                    toggleChat,
+                    navChatNotification
                 }) => {
 
     let location = useLocation();
@@ -32,7 +34,8 @@ const Navbar = ({
     }, [location])
 
     return (
-        <div className="flex w-screen dark:border-gray-700 dark:border-opacity-50 border-transparent border-b dark:bg-gray-800 bg-white shadow-sm items-center justify-between h-14 px-2 lg:px-4 z-20">
+        <div
+            className="flex w-screen dark:border-gray-700 dark:border-opacity-50 border-transparent border-b dark:bg-gray-800 bg-white shadow-sm items-center justify-between h-14 px-2 lg:px-4 z-20">
             <div className="flex">
                 <Link
                     to="/"
@@ -144,12 +147,20 @@ const Navbar = ({
                 {loggedIn ?
                     <div className="flex items-center space-x-3">
                         <ThemeSwitch/>
-                        <div onClick={() => setIsPostModalOpen(true)}
-                             className="text-yellow-500 flex items-center justify-center cursor-pointer hover:border-red-500 hover:text-red-500">
+                        <div onClick={toggleChat}
+                             className="relative text-yellow-500 flex items-center justify-center cursor-pointer hover:border-red-500 hover:text-red-500">
+                            {navChatNotification &&
+                            <div>
+                                <div
+                                    className="absolute h-3 w-3 bg-red-500 bottom-5 left-5 rounded-full"/>
+                                <div
+                                    className="animate-ping absolute h-3 w-3 bg-red-500 bottom-5 left-5 rounded-full opacity-75"/>
+                            </div>
+                            }
                             <BsChatDots className="h-7 w-7 mb-0.5"/>
                         </div>
                         <div onClick={() => setIsPostModalOpen(true)}
-                                className="text-yellow-500 flex items-center justify-center cursor-pointer hover:border-red-500 hover:text-red-500">
+                             className="text-yellow-500 flex items-center justify-center cursor-pointer hover:border-red-500 hover:text-red-500">
                             <AiOutlinePlus className="h-8 w-8"/>
                         </div>
                         <SettingsMenu userData={userData} handleLogout={logout}/>

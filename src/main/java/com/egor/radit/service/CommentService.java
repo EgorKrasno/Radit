@@ -6,6 +6,7 @@ import com.egor.radit.mapper.CommentMapper;
 import com.egor.radit.model.Comment;
 import com.egor.radit.model.Post;
 import com.egor.radit.model.User;
+import com.egor.radit.model.chat.Message;
 import com.egor.radit.repository.CommentRepository;
 import com.egor.radit.repository.PostRepository;
 import com.egor.radit.repository.UserRepository;
@@ -45,10 +46,9 @@ public class CommentService {
 
         if (post.getUser() != user) {
             simpMessagingTemplate.convertAndSendToUser(
-                    post.getUser().getUsername(), "/reply",
-                    String.format("%s commented on your post", StringUtils.capitalize(user.getUsername())));
+                    post.getUser().getUsername(), "/reply", new Message("toast",
+                            String.format("%s commented on your post", StringUtils.capitalize(user.getUsername()))));
         }
-
     }
 
     public List<CommentDto> getAllCommentsForPost(Long postId) throws RaditException {

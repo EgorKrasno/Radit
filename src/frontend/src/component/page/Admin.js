@@ -8,7 +8,7 @@ const Admin = ({client}) => {
     const blastEm = (e) => {
         e.preventDefault();
         client.current.sendMessage('/app/blastAll', JSON.stringify({
-            type: 'spam',
+            type: 'confetti',
             recipient: '',
             message: globalMessage,
         }));

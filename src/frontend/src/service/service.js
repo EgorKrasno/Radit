@@ -27,6 +27,26 @@ export const getLeaderboard = async () => {
     return await axios.get(`/api/leaderboard/top`);
 }
 
+export const getConversations = async (username) => {
+    console.log("getConversations")
+    return await axios.get(`/api/conversation/` + username, {headers: {Authorization: `Bearer ${getToken()}`}})
+}
+
+export const createNewConversation = async (username) => {
+    console.log("createNewConversation")
+    return await axios.post(`/api/conversation/`, {username}, {headers: {Authorization: `Bearer ${getToken()}`}})
+}
+
+export const viewConversation = async (id) => {
+    console.log("viewConversation")
+    return await axios.post(`/api/conversation/view/`, {id}, {headers: {Authorization: `Bearer ${getToken()}`}})
+}
+
+export const getMessages = async (conversationId) => {
+    console.log("getMessages")
+    return await axios.get(`/api/messages/${conversationId}`, {headers: {Authorization: `Bearer ${getToken()}`}})
+}
+
 export const createComment = async (comment) => {
     await axios.post(`/api/comments/save`, comment, {headers: {Authorization: `Bearer ${getToken()}`}});
 }
@@ -53,12 +73,15 @@ export const register = async (user) => {
 }
 
 export const vote = async (vote) => {
-    console.log(vote);
     return await axios.post(`/api/vote`, vote, {headers: {Authorization: `Bearer ${getToken()}`}});
 }
 
 export const health = async () => {
     return await axios.get(`/api/user/health`, {headers: {Authorization: `Bearer ${getToken()}`}})
+}
+
+export const getAllUsers = async () => {
+    return await axios.get(`/api/user/all/`, {headers: {Authorization: `Bearer ${getToken()}`}})
 }
 
 export const onToken = async (token, awardId, postId) => {

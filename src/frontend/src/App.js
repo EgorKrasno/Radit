@@ -23,22 +23,26 @@ const App = () => {
     let history = useHistory();
     const [loggedIn, setLoggedIn] = useState(localStorage.getItem("token") !== null);
     const [userData, setUserData] = useState({username: "", roleList: []});
-    const [isPostModalOpen, setIsPostModalOpen] = useState(false)
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
-    const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false)
+    const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
     const [confetti, setConfetti] = useState(false);
-    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState({});
+    const [showChat, setShowChat] = useState(false);
+    const [navChatNotification, setNavChatNotification] = useState(false);
 
 
     useEffect(() => {
-        // async function fetchHealth() {
-        //     try {
-        //         await health();
-        //     } catch (e) {
-        //         localStorage.clear();
-        //         setLoggedIn(false);
-        //     }
-        // }
+        async function fetchHealth() {
+            try {
+                await health();
+                console.log("Health OK")
+            } catch (e) {
+                localStorage.clear();
+                setLoggedIn(false);
+                console.log("Health BAD")
+            }
+        }
 
         if (localStorage.getItem("userData") !== null) {
             const data = localStorage.getItem("userData");
@@ -50,7 +54,7 @@ const App = () => {
             setLoggedIn(false);
         }
 
-        // fetchHealth();
+        fetchHealth();
     }, []);
 
     const handleLogin = async (user) => {
@@ -89,6 +93,7 @@ const App = () => {
     const logout = async () => {
         localStorage.clear();
         setLoggedIn(false);
+        setShowChat(false);
         history.replace({
             pathname: `/j/All`,
             search: "?sortBy=voteCount",
@@ -97,21 +102,25 @@ const App = () => {
         setUserData({username: "", roles: []});
     }
 
-    const confettiCannon = () => {
+    const toggleChat = () => {
+        setNavChatNotification(false);
+        setShowChat(!showChat);
+    };
 
-    }
 
     return (
         <div className="relative">
-            {/*{(loggedIn && userData.roleList.includes("ROLE_SUPER_ADMIN")) &&*/}
-            {/*<div onClick={() => history.push('/admin')}*/}
-            {/*     className="z-50 absolute bottom-2 right-6 text-red-700 border-red-700 h-24 w-24 border-4  rounded-full flex items-center justify-center cursor-pointer">*/}
-            {/*    <GiOctopus className="h-16 w-16"/>*/}
-            {/*</div>}*/}
+            {(loggedIn && userData.roleList.includes("ROLE_SUPER_ADMIN")) &&
+            <div onClick={() => history.push('/admin')}
+                 className="z-50 absolute bottom-3 left-3 text-red-700 border-red-700 h-24 w-24 border-4  rounded-full flex items-center justify-center cursor-pointer">
+                <GiOctopus className="h-16 w-16"/>
+            </div>}
 
             <div className="flex flex-col h-screen">
                 <Navbar loggedIn={loggedIn}
                         logout={logout}
+                        toggleChat={toggleChat}
+                        navChatNotification={navChatNotification}
                         userData={userData}
                         setIsPostModalOpen={() => setIsPostModalOpen(true)}
                         setIsRegisterModalOpen={() => setIsRegisterModalOpen(true)}
@@ -165,23 +174,28 @@ const App = () => {
                           }}
                           onMessage={(msg) => {
                               if (msg.type === 'message') {
-                                  setMessages((prev) => {
-                                      setMessages([...prev, msg]);
+
+                                  if (showChat) {
+                                      setNewMessage(msg);
+                                  } else {
+                                      setNavChatNotification(true);
+                                  }
+                              }
+                              if (msg.type === 'confetti') {
+                                  setConfetti(!confetti);
+                                  return;
+                              }
+                              if (msg.type === 'toast') {
+                                  toast(msg['message'], {
+                                      style: {
+                                          background: '#E0F5E9',
+                                      },
+                                      duration: 6000,
+                                      icon: "🎉",
+                                      position: "bottom-left",
                                   })
                               }
-                          //     if (msg.type['confetti']) {
-                          //         setConfetti(!confetti);
-                          //         return;
-                          //     }
-                          //
-                          //     toast(msg.type['toast'], {
-                          //         style: {
-                          //             background: '#E0F5E9',
-                          //         },
-                          //         duration: 6000,
-                          //         icon: "🎉",
-                          //         position: "bottom-left",
-                          //     })
+
                           }}
                           ref={clientRef}/>}
 
@@ -189,7 +203,11 @@ const App = () => {
                 width={width}
                 height={height}
             />}
-            <Chat client={clientRef} messages={messages} setMessages={(m)=>setMessages(m)} user={userData.username}/>
+
+            {(showChat && loggedIn) &&
+            <Chat client={clientRef} closeChat={() => setShowChat(false)} newMessage={newMessage}
+                  user={userData.username}/>}
+
         </div>
     );
 }

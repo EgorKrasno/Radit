@@ -8,6 +8,7 @@ import com.egor.radit.model.Award;
 import com.egor.radit.model.Post;
 import com.egor.radit.model.Section;
 import com.egor.radit.model.User;
+import com.egor.radit.model.chat.Message;
 import com.egor.radit.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -129,7 +130,7 @@ public class PostService {
 
         simpMessagingTemplate.convertAndSendToUser(
                 post.getUser().getUsername(), "/reply",
-                "Your spicy post received an award!");
+                new Message("toast", "Your spicy post received an award!"));
 
         List<Award> awardsList = post.getAwards();
         awardsList.add(award);

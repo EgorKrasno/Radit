@@ -1,32 +1,51 @@
-package com.egor.radit.controller;
+package com.egor.radit.controller.chat;
 
-import com.egor.radit.dto.WsMessage;
+import com.egor.radit.dto.MessageDto;
 import com.egor.radit.exception.RaditException;
 import com.egor.radit.model.User;
 import com.egor.radit.repository.RoleRepository;
 import com.egor.radit.repository.UserRepository;
+import com.egor.radit.service.chat.MessageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-public class MessagingController {
+public class MessageController {
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpUserRegistry simpUserRegistry;
+    private final MessageService messageService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
+    @GetMapping("/api/messages/{conversationId}")
+    public ResponseEntity<List<MessageDto>> getAllMessages(@PathVariable long conversationId) throws RaditException {
+        return new ResponseEntity<>(messageService.getAll(conversationId), HttpStatus.OK);
+    }
+
+
     @MessageMapping("/sendPrivateMessage")
-    public void sendPrivateMessage(Principal principal, @Payload WsMessage wsMessage) throws RaditException {
+    public void sendPrivateMessage(Principal principal, @Payload MessageDto messageRequest) throws RaditException {
+        messageService.saveMessage(messageRequest, principal);
+        System.out.println(simpUserRegistry.getUser(messageRequest.getRecipient()));
+
 
         simpMessagingTemplate.convertAndSendToUser(
-                wsMessage.getRecipient(), "/reply", wsMessage);
+                        messageRequest.getRecipient(), "/reply", messageRequest);
     }
+
 
     @MessageMapping("/blastAll")
     @SendTo("/topic/all")

@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -93,6 +95,10 @@ public class MyUserDetailsService implements UserDetailsService {
         return userDataDto;
     }
 
+    public List<String> getAll() {
+        return userRepository.findAll().stream().map(User::getUsername).collect(Collectors.toList());
+    }
+
     private void validateUser(User request) throws RaditException {
         if (userRepository.existsByUsername(request.getUsername().trim())) {
             throw new RaditException("Username is taken");
@@ -108,18 +114,10 @@ public class MyUserDetailsService implements UserDetailsService {
         return userRepository.existsByUsername(auth.getName());
     }
 
-
-    public void getUserData(Authentication auth) throws RaditException {
-
-    }
-
 //    public User getUser(String username) {
 //        log.info("Fetching user: {}", username);
 //        return userRepository.findByUsername(username);
 //    }
 //
-//    public List<User> getUsers() {
-//        log.info("Fetching all users");
-//        return userRepository.findAll();
-//    }
+
 }

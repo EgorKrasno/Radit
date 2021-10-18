@@ -5,6 +5,7 @@ import com.egor.radit.exception.RaditException;
 import com.egor.radit.model.Post;
 import com.egor.radit.model.User;
 import com.egor.radit.model.Vote;
+import com.egor.radit.model.chat.Message;
 import com.egor.radit.repository.PostRepository;
 import com.egor.radit.repository.UserRepository;
 import com.egor.radit.repository.VoteRepository;
@@ -35,7 +36,7 @@ public class VoteService {
 
         if(voteDto.getDirection() > 0 && user != poster){
             simpMessagingTemplate.convertAndSendToUser(
-                    poster.getUsername(), "/reply", "Someone upvoted your Post!");
+                    poster.getUsername(), "/reply", new Message("toast", "Someone upvoted your Post!"));
         }
 
         if (vote.isEmpty()) {

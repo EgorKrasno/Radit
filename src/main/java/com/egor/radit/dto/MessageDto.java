@@ -5,10 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class WsMessage {
+@AllArgsConstructor
+public class MessageDto {
     private String type;
     private String recipient;
     private String message;
+    private long conversationId;
 }
