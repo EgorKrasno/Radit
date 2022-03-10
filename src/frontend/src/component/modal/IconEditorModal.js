@@ -1,6 +1,6 @@
 import {Fragment} from "react";
-import {Dialog, Transition} from "@headlessui/react";
-import {IoClose} from "react-icons/all";
+import {Dialog, RadioGroup, Transition} from "@headlessui/react";
+import {GiChicken, IoClose} from "react-icons/all";
 
 
 const IconEditorModal = ({isOpen, closeModal}) => {
@@ -54,7 +54,40 @@ const IconEditorModal = ({isOpen, closeModal}) => {
                                     Icon Editor
                                 </Dialog.Title>
                                 <div className="h-7 w-7 invisible"/>
+
+
                             </div>
+                            <div className="flex flex-col">
+                                <div className="flex justify-center pt-4">
+                                    <div
+                                        className="flex items-center justify-center w-28 h-28 bg-green-500 rounded-full relative shadow-lg">
+                                        <GiChicken className="text-white w-18 h-18" size={80}/>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h1 className="text-gray-900 pt-4 font-bold text-xl">Icon</h1>
+                                    <RadioGroup as="div" className="flex flex justify-center"
+                                                value={"test"}
+                                                onChange={() => console.log("Test")}>
+                                        <RadioGroup.Option
+                                            value={"test"}
+                                        >
+                                            {({checked}) => (
+                                                <div
+                                                    className={`cursor-pointer flex items-center px-3 py-3`}>
+                                                    <div className="relative">
+                                                        <div
+                                                            className="bg-gray-700 shadow rounded-full flex items-center justify-center p-2">
+                                                            <GiChicken className="text-white w-16 h-16"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </RadioGroup.Option>
+                                    </RadioGroup>
+                                </div>
+                            </div>
+
 
                         </div>
                     </Transition.Child>

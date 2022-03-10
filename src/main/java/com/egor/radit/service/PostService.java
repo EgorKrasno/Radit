@@ -83,6 +83,7 @@ public class PostService {
         User user = userRepository.findByUsername(auth != null ? auth.getName() : null).orElse(null);
         Optional<Section> foundSection = sectionRepository.findByName(section);
 
+
         if (section.equals("all")) {
             pageResult = postRepository.findAll(paging);
         } else {

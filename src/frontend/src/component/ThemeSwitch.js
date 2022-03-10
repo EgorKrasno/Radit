@@ -13,7 +13,6 @@ export default function CustomLabelExample() {
 
     }
 
-
     return (
         <Switch.Group>
             <div className="flex items-center">

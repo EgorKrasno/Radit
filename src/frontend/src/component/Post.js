@@ -49,6 +49,7 @@ const Post = ({post, openLoginModal, loggedIn, user}) => {
 
 
     const handleVote = async (direction) => {
+        console.log(direction);
         if (!loggedIn) {
             openLoginModal();
             return;
@@ -101,7 +102,7 @@ const Post = ({post, openLoginModal, loggedIn, user}) => {
                              onAnimationEnd={() => setDownvoteEffect(false)}
                              onClick={() => handleVote(-1)}>
                             <FaArrowDown size={22}
-                                         className={`${voteDirection === -1 && "text-blue-600"} cursor-pointer dark:text-gray-500 text-gray-500 dark:hover:text-blue-600 hover:text-blue-600`}/>
+                                         className={`${voteDirection === -1 && "text-blue-600"} cursor-pointer text-gray-500 dark:hover:text-blue-600 hover:text-blue-600`}/>
                         </div>
                     </div>
                     <div className="flex-1 p-2.5">

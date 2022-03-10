@@ -1,4 +1,5 @@
 import {useState} from "react";
+import {FaBan, GiChicken, GiHammerDrop} from "react-icons/all";
 
 const Admin = ({client}) => {
     const [globalMessage, setGlobalMessage] = useState('');
@@ -17,7 +18,7 @@ const Admin = ({client}) => {
 
     return (
         <div className="dark:bg-gray-900 bg-gray-200 flex-1">
-            <div className="flex flex-col">
+            <div className="flex flex-row">
                 <div className="dark:bg-gray-800 bg-white w-80 m-6 p-4 rounded-xl shadow-md">
                     <h1 className="dark:text-gray-100 text-gray-900 text-center font-bold text-xl pb-1">Everyone</h1>
                     <form className="mt-2 space-y-4 w-full" onSubmit={blastEm}>
@@ -33,7 +34,29 @@ const Admin = ({client}) => {
                         </button>
                     </form>
                 </div>
+                <div className="flex flex-col">
 
+                    <div
+                        className="flex items-center justify-between dark:bg-gray-800 bg-white w-96 mt-6 p-4 rounded-xl shadow-md">
+                        <div className="flex">
+                            <div
+                                className="bg-green-500 shadow-md rounded-full flex items-center justify-center self-end p-1">
+                                <GiChicken className="text-white w-6 h-6"/>
+                            </div>
+                            <div className="flex items-center space-x-1.5 ml-2">
+                                <div className="flex flex-col">
+                                    <p className="dark:text-gray-100 text-gray-900 text-center font-bold text-lg">Username</p>
+                                </div>
+                                <div className="w-3 h-3 rounded-full bg-green-500 mt-0.5"/>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 rounded-full w-12 h-12 p-1.5 cursor-pointer">
+                            <p className="text-xs text-gray-500 -mt-1">Ban</p>
+                            <GiHammerDrop className="text-red-500 h-6 w-6"/>
+                        </div>
+
+                    </div>
+                </div>
                 {/*<div className="dark:bg-gray-800 bg-white w-80 m-6 p-4 rounded-xl shadow-md">*/}
                 {/*    <h1 className="dark:text-gray-100 text-gray-900 text-center font-bold text-xl pb-1">Private</h1>*/}
                 {/*    <form className="mt-2 space-y-4 w-full" onSubmit={sendPrivateMessage}>*/}

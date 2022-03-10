@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react'
-import {health, login, register} from "./service/service";
+import {getReadStatus, health, login, register} from "./service/service";
 import PostModal from "./component/modal/PostModal";
 import LoginModal from "./component/modal/LoginModal";
 import RegisterModal from "./component/modal/RegisterModal";
@@ -44,6 +44,16 @@ const App = () => {
             }
         }
 
+        async function fetchConversationStatus() {
+            try {
+                const result = await getReadStatus();
+                console.log(result.data);
+                setNavChatNotification(!result.data);
+            } catch (e) {
+                console.log("Error get conversations");
+            }
+        }
+
         if (localStorage.getItem("userData") !== null) {
             const data = localStorage.getItem("userData");
             const initialValue = JSON.parse(data);
@@ -55,6 +65,7 @@ const App = () => {
         }
 
         fetchHealth();
+        fetchConversationStatus();
     }, []);
 
     const handleLogin = async (user) => {

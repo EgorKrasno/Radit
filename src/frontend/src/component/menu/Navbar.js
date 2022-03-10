@@ -40,7 +40,17 @@ const Navbar = ({
                 <Link
                     to="/"
                     className="cursor-pointer flex items-center text-3xl text-red-500 space-x-1">
-                    <GiChiliPepper size={34} className="text-red-500"/>
+                    <div className="logo">
+                        <GiChiliPepper  size={34} className="text-red-500 z-50"/>
+                        <div className="ember"/>
+                        <div className="ember"/>
+                        <div className="ember"/>
+                        <div className="ember"/>
+                        <div className="ember"/>
+                        <div className="ember"/>
+                        <div className="ember"/>
+                        <div className="ember"/>
+                    </div>
                     <p className="hidden sm:inline-block font-custom ">Spicy</p>
                 </Link>
 
@@ -140,7 +150,6 @@ const Navbar = ({
                         </RadioGroup.Option>
                     </div>
                 </RadioGroup>
-
 
             </div>
             <div className="space-x-2">

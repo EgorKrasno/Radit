@@ -42,6 +42,10 @@ export const viewConversation = async (id) => {
     return await axios.post(`/api/conversation/view/`, {id}, {headers: {Authorization: `Bearer ${getToken()}`}})
 }
 
+export const getReadStatus = async () => {
+    return await axios.get(`/api/conversation/read`, {headers: {Authorization: `Bearer ${getToken()}`}})
+}
+
 export const getMessages = async (conversationId) => {
     console.log("getMessages")
     return await axios.get(`/api/messages/${conversationId}`, {headers: {Authorization: `Bearer ${getToken()}`}})

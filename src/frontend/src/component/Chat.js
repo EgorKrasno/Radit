@@ -30,7 +30,6 @@ const Chat = ({client, newMessage, user, closeChat}) => {
     useEffect(() => {
         if (Object.keys(newMessage).length === 0) return;
 
-
         //No conversations yet and received a message
         if (conversations.length === 0) {
             async function fetchData() {
@@ -56,6 +55,16 @@ const Chat = ({client, newMessage, user, closeChat}) => {
             setMessages((prev) => {
                 setMessages([...prev, newMessage]);
             })
+            async function handleView() {
+                try {
+                    await viewConversation(activeConversation.id);
+                    console.log("Sending " + activeConversation.id);
+                } catch (e) {
+                    console.log("Failed to view notification");
+                }
+            }
+            handleView();
+
         } else if (conversation === undefined) { //Other user intiated a new conversation, reload conversations
             async function fetchData() {
                 try {
@@ -70,14 +79,14 @@ const Chat = ({client, newMessage, user, closeChat}) => {
 
             fetchData();
         } else {
-            turnOffNotification(newMessage.conversationId);
+            turnOnNotification(newMessage.conversationId);
         }
     }, [newMessage])
 
     //Creation conversation mode swap
     useEffect(() => {
         if (!user) return;
-        console.log("Create Conversation Hook Activated")
+        console.log("Create Conversation Hook Activated");
 
         async function fetchData() {
             if (createConversationMode) {
@@ -89,13 +98,14 @@ const Chat = ({client, newMessage, user, closeChat}) => {
 
                     setAllUsers(allUsers.filter((u) => !usersInConversation.includes(u) && u !== user));
                 } catch (e) {
-                    toast.error("Failed to get user list");
+                    console.log("Failed to get user list");
                 }
             } else {
                 try {
                     const response = await getConversations(user);
                     setConversations(response.data);
                     setActiveConversation(response.data[0]);
+                    setSelected(response.data[0].user);
                     await handleNewActiveConversation(response.data[0])
                 } catch (e) {
                     console.log('Failed to get conversations');
@@ -177,7 +187,7 @@ const Chat = ({client, newMessage, user, closeChat}) => {
         }
     }
 
-    const turnOffNotification = (id) => {
+    const turnOnNotification = (id) => {
         setConversations((prev) => {
             let newConversations = [];
             for (let item of prev) {
@@ -198,7 +208,7 @@ const Chat = ({client, newMessage, user, closeChat}) => {
 
                     {/* Conversation List / Creation Mode */}
                     <div
-                        className="flex h-full bg-gray-50 w-48 rounded-tl-2xl border-r dark:bg-gray-700 dark:border-gray-500 border-gray-200">
+                        className="flex h-full bg-gray-50 w-2/6 rounded-tl-2xl border-r dark:bg-gray-700 dark:border-gray-500 border-gray-200">
                         <div className="flex flex-col w-full">
                             <div className="pl-4 pr-2 py-2 flex items-center justify-between">
                                 <h1 className="text-lg font-bold dark:text-gray-100 text-gray-900">{createConversationMode ? "Add to Chat" : "Chat"}</h1>
@@ -228,7 +238,8 @@ const Chat = ({client, newMessage, user, closeChat}) => {
                                                 className="bg-green-500 shadow rounded-full flex items-center justify-center p-1">
                                                 <GiChicken className="text-white w-6 h-6"/>
                                             </div>
-                                            <div className="dark:text-gray-100 text-gray-900 flex w-full cursor-pointer capitalize">
+                                            <div
+                                                className="dark:text-gray-100 text-gray-900 flex w-full cursor-pointer capitalize">
                                                 {username}
                                             </div>
                                         </div>)
@@ -262,7 +273,8 @@ const Chat = ({client, newMessage, user, closeChat}) => {
                                                             <GiChicken className="text-white w-6 h-6"/>
                                                         </div>
                                                     </div>
-                                                    <div className="dark:text-gray-100 text-gray-900 flex w-full cursor-pointer capitalize">
+                                                    <div
+                                                        className="dark:text-gray-100 text-gray-900 flex w-full cursor-pointer capitalize">
                                                         {conversation.user}
                                                     </div>
                                                 </div>
@@ -275,7 +287,7 @@ const Chat = ({client, newMessage, user, closeChat}) => {
                     </div>
 
                     {/* Chat box */}
-                    <div className="flex flex-col flex-1 rounded-tr-2xl h-full">
+                    <div className="flex w-4/6 flex-col flex-1 rounded-tr-2xl h-full">
 
                         {/* Chat box navbar */}
                         <div
@@ -293,7 +305,8 @@ const Chat = ({client, newMessage, user, closeChat}) => {
                             </div>
                         </div>
                         <div className="dark:bg-gray-800 bg-white flex flex-col overflow-y-hidden h-full">
-                            <div className="dark:bg-gray-800  overflow-y-auto bg-white flex flex-col comments mr-0.5 mt-0.5 h-full">
+                            <div
+                                className="dark:bg-gray-800 overflow-y-auto bg-white flex flex-col comments mr-0.5 mt-0.5 h-full">
                                 <div className="flex flex-grow"/>
 
                                 {(activeConversation && messages) &&

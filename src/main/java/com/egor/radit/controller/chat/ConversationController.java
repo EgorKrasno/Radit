@@ -39,5 +39,12 @@ public class ConversationController {
         return new ResponseEntity<>(conversationService.getAll(username), OK);
     }
 
+    //returns true if all conversations are read
+    @GetMapping("/read")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public ResponseEntity<Boolean> read(Authentication auth) throws RaditException {
+        return new ResponseEntity<>(conversationService.read(auth), OK);
+    }
+
 
 }

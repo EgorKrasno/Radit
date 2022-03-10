@@ -7,7 +7,6 @@ import {
 import {useEffect, useState} from "react";
 import {getUserData} from "../../service/service";
 import toast from "react-hot-toast";
-import PostModal from "../modal/PostModal";
 import IconEditorModal from "../modal/IconEditorModal";
 
 const UserPage = () => {

@@ -48,6 +48,7 @@ public class ConversationService {
         List<Conversation> conversations = conversationRepository.findAllByUser1OrUser2(user, user);
 
         List<ConversationDto> conversationsDtos = new ArrayList<>();
+
         for (Conversation conversation : conversations) {
             ConversationDto conversationDto = new ConversationDto();
 
@@ -73,7 +74,7 @@ public class ConversationService {
         String username = auth.getName();
 
         //Requester viewed the notification
-        if(conversation.getUser1().getUsername().equals(username) ){
+        if (conversation.getUser1().getUsername().equals(username)) {
             conversation.setUser1Viewed(true);
         } else {
             conversation.setUser2Viewed(true);
@@ -83,4 +84,16 @@ public class ConversationService {
         return conversation;
     }
 
+    public boolean read(Authentication auth) throws RaditException {
+        User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new RaditException("User not found"));
+        List<Conversation> conversations = conversationRepository.findAllByUser1OrUser2(user, user);
+        for (Conversation c : conversations) {
+            if (user.getUsername().equals(c.getUser1().getUsername())) {
+                if (!c.isUser1Viewed()) return false;
+            } else {
+                if (!c.isUser2Viewed()) return false;
+            }
+        }
+        return true;
+    }
 }
