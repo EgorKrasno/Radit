@@ -3,8 +3,6 @@
 
 A Reddit clone using Spring Boot and React JS.
 
-[View Demo](https://egor-dev.com)
-
 **Frontend**
 - ReactJs
 - TailwindCss
